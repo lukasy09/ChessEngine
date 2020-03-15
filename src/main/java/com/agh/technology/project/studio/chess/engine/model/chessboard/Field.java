@@ -7,21 +7,35 @@ import com.agh.technology.project.studio.chess.engine.model.enums.Color;
  */
 public class Field {
 
-    private Position position;
-    private Color color;
+    private String file;
 
-    public Field(Position position, Color color) {
-        this.position = position;
+    public Field() {}
+
+    public Field(String file, int rank, Color color) {
+        this.file = file;
+        this.rank = rank;
         this.color = color;
     }
 
-    public Position getPosition() {
-        return position;
+    public String getFile() {
+        return file;
     }
 
-    public void setPosition(Position position) {
-        this.position = position;
+    public void setFile(String file) {
+        this.file = file;
     }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    private int rank;
+    private Color color;
+
 
     public Color getColor() {
         return color;
@@ -34,7 +48,8 @@ public class Field {
     @Override
     public String toString() {
         return "Field{" +
-                "position=" + position +
+                "file='" + file + '\'' +
+                ", rank=" + rank +
                 ", color=" + color +
                 '}';
     }
