@@ -24,10 +24,6 @@ public class ChessBoard {
         return initialBoard;
     }
 
-    public void setInitialBoard(ChessPiece[][] initialBoard) {
-        this.initialBoard = initialBoard;
-    }
-
     private ChessPiece[][] initialBoard = {
             {BR, BN, BB, BQ, BK, BP, BN, BR},
             {BP, BP, BP, BP, BP, BP, BP, BP},
@@ -42,46 +38,54 @@ public class ChessBoard {
             {WR, WN, WB, WQ, WK, WB, WN, WR}
     };
 
-    public void generateInitialPositions(ChessPiece[][] board) {
 
-        for (int i = 0; i < 64; i++) {
-            switch (board[i / 8][i % 8]) {
-                case WP:
-                    WHITE_PAWN |= (1L << i);
-                    break;
-                case WN:
-                    WHITE_KNIGHT |= (1L << i);
-                    break;
-                case WB:
-                    WHITE_BISHOP |= (1L << i);
-                    break;
-                case WR:
-                    WHITE_ROOK |= (1L << i);
-                    break;
-                case WQ:
-                    WHITE_QUEEN |= (1L << i);
-                    break;
-                case WK:
-                    WHITE_KING |= (1L << i);
-                    break;
-                case BP:
-                    BLACK_PAWN |= (1L << i);
-                    break;
-                case BB:
-                    BLACK_BISHOP |= (1L << i);
-                    break;
-                case BN:
-                    BLACK_KNIGHT |= (1L << i);
-                    break;
-                case BR:
-                    BLACK_ROOK |= (1L << i);
-                case BQ:
-                    BLACK_QUEEN |= (1L << i);
-                    break;
-                case BK:
-                    BLACK_KING |= (1L << i);
-                    break;
+    public String displayAsBinary(long value){
+        return Long.toBinaryString(value);
+    }
+
+    public class ChessBoardBuilder{
+        public void buildPositions(ChessPiece[][] board) {
+
+            for (int i = 0; i < BOARD_AREA; i++) {
+                switch (board[i / BOARD_DIM][i % BOARD_DIM]) {
+                    case WP:
+                        WHITE_PAWN |= (1L << i);
+                        break;
+                    case WN:
+                        WHITE_KNIGHT |= (1L << i);
+                        break;
+                    case WB:
+                        WHITE_BISHOP |= (1L << i);
+                        break;
+                    case WR:
+                        WHITE_ROOK |= (1L << i);
+                        break;
+                    case WQ:
+                        WHITE_QUEEN |= (1L << i);
+                        break;
+                    case WK:
+                        WHITE_KING |= (1L << i);
+                        break;
+                    case BP:
+                        BLACK_PAWN |= (1L << i);
+                        break;
+                    case BB:
+                        BLACK_BISHOP |= (1L << i);
+                        break;
+                    case BN:
+                        BLACK_KNIGHT |= (1L << i);
+                        break;
+                    case BR:
+                        BLACK_ROOK |= (1L << i);
+                    case BQ:
+                        BLACK_QUEEN |= (1L << i);
+                        break;
+                    case BK:
+                        BLACK_KING |= (1L << i);
+                        break;
+                }
             }
         }
+
     }
 }

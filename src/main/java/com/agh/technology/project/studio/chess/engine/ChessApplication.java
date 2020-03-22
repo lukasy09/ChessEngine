@@ -7,8 +7,11 @@ public class ChessApplication {
     public static void main(String[] args) {
 
         ChessBoard chessBoard = ChessBoard.getInstance();
-        chessBoard.generateInitialPositions(chessBoard.getInitialBoard());
+        ChessBoard.ChessBoardBuilder builder = chessBoard.new ChessBoardBuilder();
+
+        builder.buildPositions(chessBoard.getInitialBoard());
 
         System.out.println(chessBoard.BLACK_ROOK);
+        System.out.println(chessBoard.displayAsBinary(chessBoard.BLACK_ROOK));
     }
 }
