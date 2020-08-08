@@ -11,7 +11,8 @@ public class ChessApplication {
 
         builder.buildPositions(chessBoard.getInitialBoard());
 
-        System.out.println(chessBoard.BLACK_ROOK);
-        System.out.println(chessBoard.displayAsBinary(chessBoard.BLACK_ROOK));
+        System.out.println(chessBoard.getWHITE_ROOK());
+        System.out.println(chessBoard.displayAsBinary(chessBoard.getWHITE_ROOK()));
+        System.out.println(chessBoard.displayAsFormattedBinary(chessBoard.getWHITE_ROOK()));
     }
 }

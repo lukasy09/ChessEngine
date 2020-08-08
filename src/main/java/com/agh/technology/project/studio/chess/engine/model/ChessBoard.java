@@ -3,7 +3,7 @@ package com.agh.technology.project.studio.chess.engine.model;
 import static com.agh.technology.project.studio.chess.engine.model.ChessPiece.*;
 
 public class ChessBoard {
-    public long BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING,
+    private long BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING,
             WHITE_PAWN, WHITE_KNIGHT, WHITE_BISHOP, WHITE_ROOK, WHITE_QUEEN, WHITE_KING = 0L;
 
     private final int BOARD_DIM = 8;
@@ -32,7 +32,6 @@ public class ChessBoard {
             {NO, NO, NO, NO, NO, NO, NO, NO},
             {NO, NO, NO, NO, NO, NO, NO, NO},
             {NO, NO, NO, NO, NO, NO, NO, NO},
-            {NO, NO, NO, NO, NO, NO, NO, NO},
 
             {WP, WP, WP, WP, WP, WP, WP, WP},
             {WR, WN, WB, WQ, WK, WB, WN, WR}
@@ -40,8 +39,14 @@ public class ChessBoard {
 
 
     public String displayAsBinary(long value){
-        return Long.toBinaryString(value);
+        String binaryString = Long.toBinaryString(value);
+        return String.format("%64s", binaryString).replace(' ', '0');
     }
+
+    public String displayAsFormattedBinary(long value){
+        return displayAsBinary(value).replaceAll("(.{8})", "$1\n");
+    }
+
 
     public class ChessBoardBuilder{
         public void buildPositions(ChessPiece[][] board) {
@@ -77,15 +82,122 @@ public class ChessBoard {
                         break;
                     case BR:
                         BLACK_ROOK |= (1L << i);
+                        break;
                     case BQ:
                         BLACK_QUEEN |= (1L << i);
                         break;
                     case BK:
                         BLACK_KING |= (1L << i);
                         break;
+                    default:
+                        continue;
                 }
             }
         }
+    }
 
+    public long getOccupied(){
+        return BLACK_PAWN|BLACK_KNIGHT|BLACK_BISHOP|BLACK_ROOK|BLACK_QUEEN|BLACK_KING
+                |WHITE_PAWN|WHITE_KNIGHT|WHITE_BISHOP|WHITE_ROOK|WHITE_QUEEN|WHITE_KING;
+    }
+
+    public long getVacant(){
+        return ~getOccupied();
+    }
+
+    public long getBLACK_PAWN() {
+        return BLACK_PAWN;
+    }
+
+    public void setBLACK_PAWN(long BLACK_PAWN) {
+        this.BLACK_PAWN = BLACK_PAWN;
+    }
+
+    public long getBLACK_KNIGHT() {
+        return BLACK_KNIGHT;
+    }
+
+    public void setBLACK_KNIGHT(long BLACK_KNIGHT) {
+        this.BLACK_KNIGHT = BLACK_KNIGHT;
+    }
+
+    public long getBLACK_BISHOP() {
+        return BLACK_BISHOP;
+    }
+
+    public void setBLACK_BISHOP(long BLACK_BISHOP) {
+        this.BLACK_BISHOP = BLACK_BISHOP;
+    }
+
+    public long getBLACK_ROOK() {
+        return BLACK_ROOK;
+    }
+
+    public void setBLACK_ROOK(long BLACK_ROOK) {
+        this.BLACK_ROOK = BLACK_ROOK;
+    }
+
+    public long getBLACK_QUEEN() {
+        return BLACK_QUEEN;
+    }
+
+    public void setBLACK_QUEEN(long BLACK_QUEEN) {
+        this.BLACK_QUEEN = BLACK_QUEEN;
+    }
+
+    public long getBLACK_KING() {
+        return BLACK_KING;
+    }
+
+    public void setBLACK_KING(long BLACK_KING) {
+        this.BLACK_KING = BLACK_KING;
+    }
+
+    public long getWHITE_PAWN() {
+        return WHITE_PAWN;
+    }
+
+    public void setWHITE_PAWN(long WHITE_PAWN) {
+        this.WHITE_PAWN = WHITE_PAWN;
+    }
+
+    public long getWHITE_KNIGHT() {
+        return WHITE_KNIGHT;
+    }
+
+    public void setWHITE_KNIGHT(long WHITE_KNIGHT) {
+        this.WHITE_KNIGHT = WHITE_KNIGHT;
+    }
+
+    public long getWHITE_BISHOP() {
+        return WHITE_BISHOP;
+    }
+
+    public void setWHITE_BISHOP(long WHITE_BISHOP) {
+        this.WHITE_BISHOP = WHITE_BISHOP;
+    }
+
+    public long getWHITE_ROOK() {
+        return WHITE_ROOK;
+    }
+
+    public void setWHITE_ROOK(long WHITE_ROOK) {
+        this.WHITE_ROOK = WHITE_ROOK;
+    }
+
+    public long getWHITE_QUEEN() {
+        return WHITE_QUEEN;
+    }
+
+    public void setWHITE_QUEEN(long WHITE_QUEEN) {
+        this.WHITE_QUEEN = WHITE_QUEEN;
+    }
+
+    public long getWHITE_KING() {
+        return WHITE_KING;
+    }
+
+    public void setWHITE_KING(long WHITE_KING) {
+        this.WHITE_KING = WHITE_KING;
     }
 }

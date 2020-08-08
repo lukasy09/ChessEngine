@@ -48,9 +48,9 @@ class ChessBoardTest {
         @Test
         void testBlackRookInitial(){
             builder.buildPositions(blackRookInitial);
-            assertNotEquals(testObject.BLACK_ROOK, 0L);
-            assertEquals(testObject.BLACK_ROOK, blackRookInitialValue);
-            assertEquals(testObject.displayAsBinary(testObject.BLACK_ROOK), blackRookInitialValueBinary);
+            assertNotEquals(testObject.getBLACK_ROOK(), 0L);
+            assertEquals(testObject.getBLACK_ROOK(), blackRookInitialValue);
+            assertEquals(testObject.displayAsBinary(testObject.getBLACK_ROOK()), blackRookInitialValueBinary);
         }
 
     }
