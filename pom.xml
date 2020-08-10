@@ -6,6 +6,7 @@
 
     <groupId>com.agh.technology</groupId>
     <artifactId>chess-engine</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <build>
         <plugins>
@@ -13,12 +14,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>7</source>
-                    <target>7</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>rays-module</module>
+    </modules>
     <name>Grim Reaper Chess Engine</name>
     <description>Chess engine project for projects studio(SP) at AGH</description>
 
