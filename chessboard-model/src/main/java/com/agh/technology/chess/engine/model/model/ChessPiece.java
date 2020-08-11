@@ -1,4 +1,4 @@
-package com.agh.technology.project.studio.chess.engine.model;
+package com.agh.technology.chess.engine.model.model;
 
 public enum ChessPiece {
     WR("WP"), // white rook
