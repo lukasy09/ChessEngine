@@ -1,6 +1,6 @@
-package com.agh.technology.chess.engine.model.model;
+package com.agh.technology.chess.engine.model.defaults;
 
-import static com.agh.technology.chess.engine.model.model.ChessPiece.*;
+import static com.agh.technology.chess.engine.model.defaults.ChessPiece.*;
 
 public class ChessBoard {
     private long BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING,

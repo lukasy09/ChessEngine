@@ -1,6 +1,6 @@
 package com.agh.technology.chess.engine.model;
 
-import com.agh.technology.chess.engine.model.model.ChessBoard;
+import com.agh.technology.chess.engine.model.defaults.ChessBoard;
 
 public class ChessApplication {
 
