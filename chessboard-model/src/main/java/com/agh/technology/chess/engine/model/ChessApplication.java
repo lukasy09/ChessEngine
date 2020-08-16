@@ -1,18 +1,18 @@
 package com.agh.technology.chess.engine.model;
 
-import com.agh.technology.chess.engine.model.defaults.ChessBoard;
+import com.agh.technology.chess.engine.model.element.Board;
 
 public class ChessApplication {
 
     public static void main(String[] args) {
 
-        ChessBoard chessBoard = ChessBoard.getInstance();
-        ChessBoard.ChessBoardBuilder builder = chessBoard.new ChessBoardBuilder();
+        Board board = Board.getInstance();
+        Board.ChessBoardBuilder builder = board.new ChessBoardBuilder();
 
-        builder.buildPositions(chessBoard.getInitialBoard());
+        builder.buildPositions(board.getInitialBoard());
 
-        System.out.println(chessBoard.getWHITE_ROOK());
-        System.out.println(chessBoard.displayAsBinary(chessBoard.getWHITE_ROOK()));
-        System.out.println(chessBoard.displayAsFormattedBinary(chessBoard.getWHITE_ROOK()));
+        System.out.println(board.getWHITE_ROOK());
+        System.out.println(board.displayAsBinary(board.getWHITE_ROOK()));
+        System.out.println(board.displayAsFormattedBinary(board.getWHITE_ROOK()));
     }
 }
