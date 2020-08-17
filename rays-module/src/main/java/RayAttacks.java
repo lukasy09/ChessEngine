@@ -6,8 +6,18 @@ import java.util.stream.Collectors;
 public class RayAttacks {
     private static RayAttacks instance = null;
     private Map<Integer,Map<Direction,Long>> attackRayMasks;
+    private Map<PieceType,Map<Integer,Long>> attackMoves;
+    private Map<PieceType,Map<Integer,Long>> blockersAndBeyond;
+    private Long[][] behind;
 
     private RayAttacks(){
+        initializeRays();
+        initializeAttackMoves();
+        initializeBlockersAndBeyond();
+        initializeBehind();
+    }
+
+    private void initializeRays(){
         attackRayMasks = new HashMap<>();
         for(int i = 0; i < 64; i++){
             Map<Direction,Long> directionMaskMap = new HashMap<>();
@@ -21,6 +31,76 @@ public class RayAttacks {
             directionMaskMap.put(Direction.NW, generateNorthWestRay(i));
 
             attackRayMasks.put(i, directionMaskMap);
+        }
+    }
+
+    private void initializeAttackMoves(){
+        attackMoves = new HashMap<>();
+        for(PieceType pieceType : PieceType.values()){
+            if(pieceType == PieceType.BISHOP){
+                Map<Integer, Long> pieceAttackMoves = new HashMap<>();
+                attackRayMasks.forEach((key, value) -> pieceAttackMoves.put(key,
+                        value.get(Direction.NE)
+                                | value.get(Direction.SE)
+                                | value.get(Direction.SW)
+                                | value.get(Direction.NW)));
+                attackMoves.put(pieceType,pieceAttackMoves);
+            }
+            else if(pieceType == PieceType.ROOK){
+                Map<Integer, Long> pieceAttackMoves = new HashMap<>();
+                attackRayMasks.forEach((key, value) -> pieceAttackMoves.put(key,
+                        value.get(Direction.N)
+                                | value.get(Direction.S)
+                                | value.get(Direction.E)
+                                | value.get(Direction.W)));
+                attackMoves.put(pieceType,pieceAttackMoves);
+            }
+            else if(pieceType == PieceType.QUEEN){
+                Map<Integer, Long> pieceAttackMoves = new HashMap<>();
+                attackRayMasks.forEach((key, value) -> pieceAttackMoves.put(key,
+                        value.get(Direction.N)
+                                | value.get(Direction.S)
+                                | value.get(Direction.E)
+                                | value.get(Direction.W)
+                                | value.get(Direction.NE)
+                                | value.get(Direction.SE)
+                                | value.get(Direction.SW)
+                                | value.get(Direction.NW)));
+                attackMoves.put(pieceType,pieceAttackMoves);
+            }
+        }
+    }
+
+    private void initializeBlockersAndBeyond(){
+        blockersAndBeyond = new HashMap<>();
+        for(PieceType pieceType : PieceType.values()) {
+            if (pieceType == PieceType.BISHOP || pieceType == PieceType.ROOK || pieceType == PieceType.QUEEN) {
+                Map<Integer, Long> blockersAndBeyondEntry = new HashMap<>();
+                attackMoves.get(pieceType).forEach((key, value) -> blockersAndBeyondEntry.put(key,
+                        value & 35604928818740736L));
+                blockersAndBeyond.put(pieceType, blockersAndBeyondEntry);
+            }
+        }
+    }
+
+    private void initializeBehind(){
+        behind = new Long[64][64];
+        for(int i = 0; i < 64; i++){
+            for(int j = 0; j < 64; j++){
+                if(i == j){
+                    behind[i][j] = 0L;
+                }else if(i > j){
+                    behind[i][j] = ((generateSouthRay(i) & generateSouthRay(j))
+                            | (generateWestRay(i) & generateWestRay(j))
+                            | (generateSouthEastRay(i) & generateSouthEastRay(j))
+                            | (generateSouthWestRay(i) & generateSouthWestRay(j)));
+                }else{
+                    behind[i][j] = (generateNorthRay(i) & generateNorthRay(j))
+                            | (generateEastRay(i) & generateEastRay(j))
+                            | (generateNorthEastRay(i) & generateNorthEastRay(j))
+                            | (generateNorthWestRay(i) & generateNorthWestRay(j));
+                }
+            }
         }
     }
 
@@ -131,9 +211,25 @@ public class RayAttacks {
         return ray;
     }
 
+    public Map<PieceType, Map<Integer, Long>> getAttackMoves() {
+        return attackMoves;
+    }
 
+    public Map<PieceType, Map<Integer, Long>> getBlockersAndBeyond() {
+        return blockersAndBeyond;
+    }
+
+    public Long[][] getBehind() {
+        return behind;
+    }
 
     public static void main(String[] args) {
+
+        System.out.println(displayAsFormattedBinary(-9205322385119248384L));
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+
         int index = 63;
         System.out.println(displayAsFormattedBinary(generateNorthRay(index)));
         System.out.println("");
@@ -164,18 +260,34 @@ public class RayAttacks {
         ));
 
         RayAttacks intance = RayAttacks.getInstance();
-        for(Map.Entry<Integer,Map<Direction,Long>> entry : intance.attackRayMasks.entrySet()){
-            System.out.println(entry.getKey());
-            System.out.println(displayAsFormattedBinary(
-                    entry.getValue().get(Direction.N)
-                            | entry.getValue().get(Direction.NE)
-                            | entry.getValue().get(Direction.E)
-                            | entry.getValue().get(Direction.SE)
-                            | entry.getValue().get(Direction.S)
-                            | entry.getValue().get(Direction.SW)
-                            | entry.getValue().get(Direction.W)
-                            | entry.getValue().get(Direction.NW)
-            ));
+//        for(Map.Entry<Integer,Map<Direction,Long>> entry : intance.attackRayMasks.entrySet()){
+//            System.out.println(entry.getKey());
+//            System.out.println(displayAsFormattedBinary(
+//                    entry.getValue().get(Direction.N)
+//                            | entry.getValue().get(Direction.NE)
+//                            | entry.getValue().get(Direction.E)
+//                            | entry.getValue().get(Direction.SE)
+//                            | entry.getValue().get(Direction.S)
+//                            | entry.getValue().get(Direction.SW)
+//                            | entry.getValue().get(Direction.W)
+//                            | entry.getValue().get(Direction.NW)
+//            ));
+//            System.out.println("");
+//        }
+
+//        for(Map.Entry<PieceType,Map<Integer,Long>> entry : intance.attackMoves.entrySet()){
+//            System.out.println(entry.getKey());
+//            for(Map.Entry<Integer,Long> entry1 : entry.getValue().entrySet()){
+//                System.out.println(displayAsFormattedBinary(entry1.getValue()));
+//                System.out.println("");
+//            }
+//            System.out.println("");
+//        }
+
+        System.out.println("");System.out.println("");System.out.println("Behind");System.out.println("");System.out.println("");
+
+        for(int i =0; i<64;i++){
+            System.out.println(displayAsFormattedBinary(instance.behind[63][i]));
             System.out.println("");
         }
     }
