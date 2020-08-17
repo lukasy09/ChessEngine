@@ -17,7 +17,7 @@ class MaterialValueCalculator {
     private static double ROOK_LOGIC_FACTOR = 1.02;
     private static double KNIGHT_LOGIC_FACTOR = 1.06667;
     private static double BISHOP_LOGIC_FACTOR = 1.1;
-    private static double PAWN_LOGIC_FACTOR = 1.06667;
+    private static double PAWN_LOGIC_FACTOR = 1;
 
     private static int SCALE_FACTOR = 100;
 
@@ -26,7 +26,7 @@ class MaterialValueCalculator {
 
         switch (pieceType) {
             case KING:
-                return KING_TRADITIONAL_MATERIAL_VALUE * KING_LOGIC_FACTOR * SCALE_FACTOR;
+                return KING_TRADITIONAL_MATERIAL_VALUE * KING_LOGIC_FACTOR;
             case QUEEN:
                 return QUEEN_TRADITIONAL_MATERIAL_VALUE * QUEEN_LOGIC_FACTOR * SCALE_FACTOR;
             case ROOK:
