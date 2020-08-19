@@ -24,7 +24,7 @@ public class MoveGenerator {
         System.out.println(RayAttacks.displayAsFormattedBinary(132096L));
         System.out.println("");
 
-        long moves = moveGenerator.generatePieceMoves(PieceType.QUEEN, 10, 132096L);
+        long moves = moveGenerator.generatePieceMoves(PieceType.KNIGHT, 10, 132096L);
         System.out.println(RayAttacks.displayAsFormattedBinary(moves));
     }
 

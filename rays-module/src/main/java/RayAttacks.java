@@ -38,26 +38,26 @@ public class RayAttacks {
         attackMoves = new HashMap<>();
         for(PieceType pieceType : PieceType.values()){
             if(pieceType == PieceType.BISHOP){
-                Map<Integer, Long> pieceAttackMoves = new HashMap<>();
-                attackRayMasks.forEach((key, value) -> pieceAttackMoves.put(key,
+                Map<Integer, Long> bishopAttackMoves = new HashMap<>();
+                attackRayMasks.forEach((key, value) -> bishopAttackMoves.put(key,
                         value.get(Direction.NE)
                                 | value.get(Direction.SE)
                                 | value.get(Direction.SW)
                                 | value.get(Direction.NW)));
-                attackMoves.put(pieceType,pieceAttackMoves);
+                attackMoves.put(pieceType,bishopAttackMoves);
             }
             else if(pieceType == PieceType.ROOK){
-                Map<Integer, Long> pieceAttackMoves = new HashMap<>();
-                attackRayMasks.forEach((key, value) -> pieceAttackMoves.put(key,
+                Map<Integer, Long> rookAttackMoves = new HashMap<>();
+                attackRayMasks.forEach((key, value) -> rookAttackMoves.put(key,
                         value.get(Direction.N)
                                 | value.get(Direction.S)
                                 | value.get(Direction.E)
                                 | value.get(Direction.W)));
-                attackMoves.put(pieceType,pieceAttackMoves);
+                attackMoves.put(pieceType,rookAttackMoves);
             }
             else if(pieceType == PieceType.QUEEN){
-                Map<Integer, Long> pieceAttackMoves = new HashMap<>();
-                attackRayMasks.forEach((key, value) -> pieceAttackMoves.put(key,
+                Map<Integer, Long> queenAttackMoves = new HashMap<>();
+                attackRayMasks.forEach((key, value) -> queenAttackMoves.put(key,
                         value.get(Direction.N)
                                 | value.get(Direction.S)
                                 | value.get(Direction.E)
@@ -66,7 +66,71 @@ public class RayAttacks {
                                 | value.get(Direction.SE)
                                 | value.get(Direction.SW)
                                 | value.get(Direction.NW)));
-                attackMoves.put(pieceType,pieceAttackMoves);
+                attackMoves.put(pieceType,queenAttackMoves);
+            }
+            else if(pieceType == PieceType.KNIGHT){
+                Map<Integer, Long> knightAttackMoves = new HashMap<>();
+                for(int index = 0; index < 64; index ++){
+                    long attackMask = 0L;
+                    if(index % 8 > 1 && index / 8 > 0){
+                        attackMask = attackMask | 1L << (index - 10);
+                    }
+                    if(index % 8 > 0 && index / 8 > 1){
+                        attackMask = attackMask | 1L << (index - 17);
+                    }
+                    if(index % 8 < 6 && index / 8 > 0){
+                        attackMask = attackMask | 1L << (index - 6);
+                    }
+                    if(index % 8 < 7 && index / 8 > 1){
+                        attackMask = attackMask | 1L << (index - 15);
+                    }
+                    if(index % 8 > 1 && index / 8 < 7){
+                        attackMask = attackMask | 1L << (index + 6);
+                    }
+                    if(index % 8 > 0 && index / 8 < 6){
+                        attackMask = attackMask | 1L << (index + 15);
+                    }
+                    if(index % 8 < 6 && index / 8 < 7){
+                        attackMask = attackMask | 1L << (index + 10);
+                    }
+                    if(index % 8 < 7 && index / 8 < 6){
+                        attackMask = attackMask | 1L << (index + 17);
+                    }
+                    knightAttackMoves.put(index, attackMask);
+                }
+                attackMoves.put(pieceType, knightAttackMoves);
+            }
+            else if(pieceType == PieceType.KING){
+                Map<Integer, Long> kingAttackMoves = new HashMap<>();
+                for(int index = 0; index < 64; index ++){
+                    long attackMask = 0L;
+                    if(index % 8 > 0 && index / 8 > 0){
+                        attackMask = attackMask | 1L << (index - 9);
+                    }
+                    if(index % 8 > 0){
+                        attackMask = attackMask | 1L << (index - 1);
+                    }
+                    if(index % 8 > 0 && index / 8 < 7){
+                        attackMask = attackMask | 1L << (index + 7);
+                    }
+                    if(index / 8 > 0){
+                        attackMask = attackMask | 1L << (index - 8);
+                    }
+                    if(index / 8 < 7){
+                        attackMask = attackMask | 1L << (index + 8);
+                    }
+                    if(index % 8 < 7 && index / 8 > 0){
+                        attackMask = attackMask | 1L << (index - 7);
+                    }
+                    if(index % 8 < 7){
+                        attackMask = attackMask | 1L << (index + 1);
+                    }
+                    if(index % 8 < 7 && index / 8 < 7){
+                        attackMask = attackMask | 1L << (index + 9);
+                    }
+                    kingAttackMoves.put(index, attackMask);
+                }
+                attackMoves.put(pieceType, kingAttackMoves);
             }
         }
     }
@@ -74,10 +138,16 @@ public class RayAttacks {
     private void initializeBlockersAndBeyond(){
         blockersAndBeyond = new HashMap<>();
         for(PieceType pieceType : PieceType.values()) {
-            if (pieceType == PieceType.BISHOP || pieceType == PieceType.ROOK || pieceType == PieceType.QUEEN) {
+            if (pieceType.equals(PieceType.BISHOP) || pieceType.equals(PieceType.ROOK) || pieceType.equals(PieceType.QUEEN)) {
                 Map<Integer, Long> blockersAndBeyondEntry = new HashMap<>();
                 attackMoves.get(pieceType).forEach((key, value) -> blockersAndBeyondEntry.put(key,
                         value & 35604928818740736L));
+                blockersAndBeyond.put(pieceType, blockersAndBeyondEntry);
+            } else if(!pieceType.equals(PieceType.PAWN)){
+                Map<Integer, Long> blockersAndBeyondEntry = new HashMap<>();
+                for(int i = 0; i < 64; i++){
+                    blockersAndBeyondEntry.put(i, 0L);
+                }
                 blockersAndBeyond.put(pieceType, blockersAndBeyondEntry);
             }
         }
@@ -286,8 +356,13 @@ public class RayAttacks {
 
         System.out.println("");System.out.println("");System.out.println("Behind");System.out.println("");System.out.println("");
 
+//        for(int i =0; i<64;i++){
+//            System.out.println(displayAsFormattedBinary(instance.behind[63][i]));
+//            System.out.println("");
+//        }
+
         for(int i =0; i<64;i++){
-            System.out.println(displayAsFormattedBinary(instance.behind[63][i]));
+            System.out.println(displayAsFormattedBinary(instance.attackMoves.get(PieceType.KING).get(i)));
             System.out.println("");
         }
     }
