@@ -10,14 +10,7 @@ import static com.agh.technology.chess.engine.evaluation.material.MaterialValueC
 public class MaterialRatingEvaluation {
 
 
-    public int evaluateTotalRating(BoardState boardState) {
-        int positionScore = 0;
-        positionScore += evaluateMaterialRating(boardState);
-
-        return positionScore;
-    }
-
-    private int evaluateMaterialRating(BoardState boardState) {
+    public int evaluateMaterialRating(BoardState boardState) {
         int materialScoreAccumulator = 0;
 
         materialScoreAccumulator += accumulateMaterialRatingForPieceType(boardState.getWhiteState().getKing(), PieceType.KING);
