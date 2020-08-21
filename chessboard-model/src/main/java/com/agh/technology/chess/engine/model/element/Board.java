@@ -1,30 +1,30 @@
-package com.agh.technology.project.studio.chess.engine.model;
+package com.agh.technology.chess.engine.model.element;
 
-import static com.agh.technology.project.studio.chess.engine.model.ChessPiece.*;
+import static com.agh.technology.chess.engine.model.element.ColorPiece.*;
 
-public class ChessBoard {
+public class Board {
     private long BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING,
             WHITE_PAWN, WHITE_KNIGHT, WHITE_BISHOP, WHITE_ROOK, WHITE_QUEEN, WHITE_KING = 0L;
 
     private final int BOARD_DIM = 8;
     private final int BOARD_AREA = 64;
 
-    private static ChessBoard instance;
+    private static Board instance;
 
-    private ChessBoard(){}
+    private Board(){}
 
-    public static ChessBoard getInstance() {
+    public static Board getInstance() {
         if(instance == null){
-            instance = new ChessBoard();
+            instance = new Board();
         }
         return instance;
     }
 
-    public ChessPiece[][] getInitialBoard() {
+    public ColorPiece[][] getInitialBoard() {
         return initialBoard;
     }
 
-    private ChessPiece[][] initialBoard = {
+    private ColorPiece[][] initialBoard = {
             {BR, BN, BB, BQ, BK, BP, BN, BR},
             {BP, BP, BP, BP, BP, BP, BP, BP},
 
@@ -49,7 +49,7 @@ public class ChessBoard {
 
 
     public class ChessBoardBuilder{
-        public void buildPositions(ChessPiece[][] board) {
+        public void buildPositions(ColorPiece[][] board) {
 
             for (int i = 0; i < BOARD_AREA; i++) {
                 switch (board[i / BOARD_DIM][i % BOARD_DIM]) {

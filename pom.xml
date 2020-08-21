@@ -23,6 +23,10 @@
     <modules>
         <module>rays-module</module>
     </modules>
+    <modules>
+        <module>score-evaluation</module>
+        <module>chessboard-model</module>
+    </modules>
     <name>Grim Reaper Chess Engine</name>
     <description>Chess engine project for projects studio(SP) at AGH</description>
 
