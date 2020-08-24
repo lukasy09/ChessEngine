@@ -21,7 +21,6 @@
         </plugins>
     </build>
     <modules>
-        <module>score-evaluation</module>
         <module>chessboard-model</module>
         <module>gui-interface</module>
     </modules>
