@@ -29,8 +29,8 @@ public class GuiInterface {
                 quit();
                 break;
             }
-            input.close();
         }
+        input.close();
     }
 
     static void inputUCI() {
