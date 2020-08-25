@@ -8,6 +8,8 @@ public class RayAttacks {
     private Map<Integer,Map<Direction,Long>> attackRayMasks;
     private Map<PieceType,Map<Integer,Long>> attackMoves;
     private Map<PieceType,Map<Integer,Long>> blockersAndBeyond;
+    private Map<Color,Map<Integer,Long>> pawnMoves;
+    private Map<Color,Map<Integer,Long>> pawnCaptureMoves;
     private Long[][] behind;
 
     private RayAttacks(){
@@ -172,6 +174,78 @@ public class RayAttacks {
                 }
             }
         }
+    }
+
+    private void initializePawnMoves(){
+        pawnMoves = new HashMap<>();
+
+        Map<Integer,Long> whitePawnMoves = new HashMap<>();
+        for(int index = 0; index < 64; index++){
+            if(index / 8 == 1){
+                long move = 1L << index + 8 & 1L << index + 16;
+                whitePawnMoves.put(index, move);
+            }else if(index / 8 < 7){
+                long move = 1L << index + 8;
+                whitePawnMoves.put(index, move);
+            }else{
+                whitePawnMoves.put(index, 0L);
+            }
+        }
+
+        Map<Integer,Long> blackPawnMoves = new HashMap<>();
+        for(int index = 0; index < 64; index++){
+            if(index / 8 == 6){
+                long move = 1L << index - 8 & 1L << index - 16;
+                whitePawnMoves.put(index, move);
+            }else if(index / 8 > 0){
+                long move = 1L << index - 8;
+                whitePawnMoves.put(index, move);
+            }else{
+                whitePawnMoves.put(index, 0L);
+            }
+        }
+
+        pawnMoves.put(Color.WHITE, whitePawnMoves);
+        pawnMoves.put(Color.BLACK, blackPawnMoves);
+    }
+
+    private void initializePawnCaptureMoves(){
+        pawnCaptureMoves = new HashMap<>();
+
+        Map<Integer,Long> whitePawnCaptureMoves = new HashMap<>();
+        for(int index = 0; index < 64; index++){
+            long move = 0L;
+            if(index / 8 < 7){
+                if(index % 8 > 0){
+                    move = move & 1L << index + 7;
+                }
+                if(index % 8 < 7){
+                    move = move & 1L << index + 9;
+                }
+                whitePawnCaptureMoves.put(index, move);
+            }else{
+                whitePawnCaptureMoves.put(index, 0L);
+            }
+        }
+
+        Map<Integer,Long> blackPawnCaptureMoves = new HashMap<>();
+        for(int index = 0; index < 64; index++){
+            long move = 0L;
+            if(index / 8 > 0){
+                if(index % 8 > 0){
+                    move = move & 1L << index - 9;
+                }
+                if(index % 8 < 7){
+                    move = move & 1L << index - 7;
+                }
+                blackPawnCaptureMoves.put(index, move);
+            }else{
+                blackPawnCaptureMoves.put(index, 0L);
+            }
+        }
+
+        pawnCaptureMoves.put(Color.WHITE, whitePawnCaptureMoves);
+        pawnCaptureMoves.put(Color.BLACK, blackPawnCaptureMoves);
     }
 
     public static RayAttacks getInstance(){
