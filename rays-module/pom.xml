@@ -10,6 +10,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>rays-module</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.agh.technology</groupId>
+            <artifactId>chessboard-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.agh.technology</groupId>
+            <artifactId>score-evaluation</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 
 </project>

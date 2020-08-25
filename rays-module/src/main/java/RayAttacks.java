@@ -1,3 +1,5 @@
+import com.agh.technology.chess.engine.model.element.PieceType;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -365,6 +367,22 @@ public class RayAttacks {
 
     public Long[][] getBehind() {
         return behind;
+    }
+
+    public Map<Color, Map<Integer, Long>> getPawnMoves() {
+        return pawnMoves;
+    }
+
+    public void setPawnMoves(Map<Color, Map<Integer, Long>> pawnMoves) {
+        this.pawnMoves = pawnMoves;
+    }
+
+    public Map<Color, Map<Integer, Long>> getPawnCaptureMoves() {
+        return pawnCaptureMoves;
+    }
+
+    public void setPawnCaptureMoves(Map<Color, Map<Integer, Long>> pawnCaptureMoves) {
+        this.pawnCaptureMoves = pawnCaptureMoves;
     }
 
     public static void main(String[] args) {

@@ -9,9 +9,18 @@ public class ScoreEvaluation {
     private final MaterialRatingEvaluation materialRatingEvaluation;
     private final PositionRatingEvaluation positionRatingEvaluation;
 
-    public ScoreEvaluation(PositionRatingEvaluation positionRatingEvaluation) {
-        this.positionRatingEvaluation = positionRatingEvaluation;
+    private static ScoreEvaluation instance;
+
+    private ScoreEvaluation() {
+        this.positionRatingEvaluation = new PositionRatingEvaluation();
         this.materialRatingEvaluation = new MaterialRatingEvaluation();
+    }
+
+    public static ScoreEvaluation getInstance(){
+        if(instance == null){
+            instance = new ScoreEvaluation();
+        }
+        return instance;
     }
 
     public int evaluateTotalRating(BoardState boardState) {

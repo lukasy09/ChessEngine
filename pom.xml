@@ -20,10 +20,9 @@
             </plugin>
         </plugins>
     </build>
+
     <modules>
         <module>rays-module</module>
-    </modules>
-    <modules>
         <module>score-evaluation</module>
         <module>chessboard-model</module>
     </modules>
