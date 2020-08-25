@@ -19,6 +19,8 @@ public class RayAttacks {
         initializeAttackMoves();
         initializeBlockersAndBeyond();
         initializeBehind();
+        initializePawnMoves();
+        initializePawnCaptureMoves();
     }
 
     private void initializeRays(){
