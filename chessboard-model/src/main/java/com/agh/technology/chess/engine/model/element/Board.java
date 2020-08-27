@@ -1,5 +1,8 @@
 package com.agh.technology.chess.engine.model.element;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import static com.agh.technology.chess.engine.model.element.ColorPiece.*;
 
 public class Board {
@@ -38,13 +41,14 @@ public class Board {
     };
 
 
-    public String displayAsBinary(long value){
-        String binaryString = Long.toBinaryString(value);
-        return String.format("%64s", binaryString).replace(' ', '0');
+    public static String displayAsFormattedBinary(long value){
+        String unreversedBoard = displayAsBinary(value).replaceAll("(.{8})", "$1\n");
+        return Arrays.stream(unreversedBoard.split("\n")).map(line -> new StringBuilder(line).reverse().toString()).collect(Collectors.joining("\n"));
     }
 
-    public String displayAsFormattedBinary(long value){
-        return displayAsBinary(value).replaceAll("(.{8})", "$1\n");
+    public static String displayAsBinary(long value){
+        String binaryString = Long.toBinaryString(value);
+        return String.format("%64s", binaryString).replace(' ', '0');
     }
 
 
@@ -89,8 +93,6 @@ public class Board {
                     case BK:
                         BLACK_KING |= (1L << i);
                         break;
-                    default:
-                        continue;
                 }
             }
         }

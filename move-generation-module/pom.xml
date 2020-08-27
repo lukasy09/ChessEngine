@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rays-module</artifactId>
+    <artifactId>move-generation-module</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.agh.technology</groupId>

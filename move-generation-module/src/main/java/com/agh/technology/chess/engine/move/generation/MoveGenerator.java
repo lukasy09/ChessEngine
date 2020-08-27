@@ -1,18 +1,34 @@
+package com.agh.technology.chess.engine.move.generation;
+
 import com.agh.technology.chess.engine.evaluation.ScoreEvaluation;
+import com.agh.technology.chess.engine.model.element.Board;
+import com.agh.technology.chess.engine.model.element.Color;
 import com.agh.technology.chess.engine.model.element.PieceType;
 import com.agh.technology.chess.engine.model.state.BlackState;
 import com.agh.technology.chess.engine.model.state.BoardState;
 import com.agh.technology.chess.engine.model.state.WhiteState;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
 
 public class MoveGenerator {
-    private RayAttacks rayAttacks;
+    private final long FIRST_ROW_MASK = 0x00000000000000FFL;
+    private final long EIGHT_ROW_MASK = -0x100000000000000L;
 
-    public MoveGenerator(){
-        rayAttacks = RayAttacks.getInstance();
+
+    private final AttackMasks attackMasks;
+    private static MoveGenerator instance;
+
+    private MoveGenerator(){
+        attackMasks = AttackMasks.getInstance();
+    }
+
+    public static MoveGenerator getInstance(){
+        if(instance == null){
+            instance = new MoveGenerator();
+        }
+
+        return instance;
     }
 
     private Long generatePieceMoves(PieceType pieceType, int pieceIndex, BoardState boardState, Color color){
@@ -20,10 +36,10 @@ public class MoveGenerator {
             return generatePawnMoves(pieceType, pieceIndex, boardState, color);
         }
 
-        long ts = rayAttacks.getAttackMoves().get(pieceType).get(pieceIndex);
-        for(long b = boardState.getOccupied() & rayAttacks.getBlockersAndBeyond().get(pieceType).get(pieceIndex); b != 0L; b = b & (b-1)){
+        long ts = attackMasks.getAttackMoves().get(pieceType).get(pieceIndex);
+        for(long b = boardState.getOccupied() & attackMasks.getBlockersAndBeyond().get(pieceType).get(pieceIndex); b != 0L; b = b & (b-1)){
             int sq = Long.numberOfTrailingZeros(b);
-            ts = ts & ~rayAttacks.getBehind()[pieceIndex][sq];
+            ts = ts & ~attackMasks.getBehind()[pieceIndex][sq];
         }
         return ts;
     }
@@ -32,8 +48,8 @@ public class MoveGenerator {
         if(!pieceType.equals(PieceType.PAWN)){
             throw new UnsupportedOperationException();
         }
-        long nonCaptureMoves = rayAttacks.getPawnMoves().get(color).get(pieceIndex) & ~boardState.getOccupied();
-        long captureMoves = rayAttacks.getPawnCaptureMoves().get(color).get(pieceIndex) & (color.equals(Color.BLACK) ? boardState.getWhiteState().getOccupied() : boardState.getBlackState().getOccupied());
+        long nonCaptureMoves = attackMasks.getPawnMoves().get(color).get(pieceIndex) & ~boardState.getOccupied();
+        long captureMoves = attackMasks.getPawnCaptureMoves().get(color).get(pieceIndex) & (color.equals(Color.BLACK) ? boardState.getWhiteState().getOccupied() : boardState.getBlackState().getOccupied());
 
         return captureMoves | nonCaptureMoves;
     }
@@ -73,8 +89,25 @@ public class MoveGenerator {
                                     break;
                                 }
                             }
-                            nextBoardState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(nextBoardState));
-                            possibleStates.add(nextBoardState);
+                            //Check if pawn should be replaced with queen or knight
+                            if((nextBoardState.getBlackState().getPawn() & FIRST_ROW_MASK) == 0){
+                                nextBoardState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(nextBoardState));
+                                possibleStates.add(nextBoardState);
+                            }else{
+                                long firstRowPawnBitmap = nextBoardState.getBlackState().getPawn() & FIRST_ROW_MASK;
+
+                                BoardState pawnQueenChangeState = new BoardState(nextBoardState);
+                                pawnQueenChangeState.getBlackState().setQueen(pawnQueenChangeState.getBlackState().getQueen() | firstRowPawnBitmap);
+                                pawnQueenChangeState.getBlackState().setPawn(pawnQueenChangeState.getBlackState().getPawn() & (~firstRowPawnBitmap));
+                                pawnQueenChangeState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(pawnQueenChangeState));
+                                possibleStates.add(pawnQueenChangeState);
+
+                                BoardState pawnKnightChangeState = new BoardState(nextBoardState);
+                                pawnKnightChangeState.getBlackState().setKnight(pawnKnightChangeState.getBlackState().getKnight() | firstRowPawnBitmap);
+                                pawnKnightChangeState.getBlackState().setPawn(pawnKnightChangeState.getBlackState().getPawn() & (~firstRowPawnBitmap));
+                                pawnKnightChangeState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(pawnKnightChangeState));
+                                possibleStates.add(pawnKnightChangeState);
+                            }
                         }
                     }
                 }
@@ -109,8 +142,25 @@ public class MoveGenerator {
                                     break;
                                 }
                             }
-                            nextBoardState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(nextBoardState));
-                            possibleStates.add(nextBoardState);
+                            //Check if pawn should be replaced with queen or knight
+                            if((nextBoardState.getWhiteState().getPawn() & EIGHT_ROW_MASK) == 0){
+                                nextBoardState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(nextBoardState));
+                                possibleStates.add(nextBoardState);
+                            }else{
+                                long eightRowPawnBitmap = nextBoardState.getWhiteState().getPawn() & EIGHT_ROW_MASK;
+
+                                BoardState pawnQueenChangeState = new BoardState(nextBoardState);
+                                pawnQueenChangeState.getWhiteState().setQueen(pawnQueenChangeState.getWhiteState().getQueen() | eightRowPawnBitmap);
+                                pawnQueenChangeState.getWhiteState().setPawn(pawnQueenChangeState.getWhiteState().getPawn() & (~eightRowPawnBitmap));
+                                pawnQueenChangeState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(pawnQueenChangeState));
+                                possibleStates.add(pawnQueenChangeState);
+
+                                BoardState pawnKnightChangeState = new BoardState(nextBoardState);
+                                pawnKnightChangeState.getWhiteState().setKnight(pawnKnightChangeState.getWhiteState().getKnight() | eightRowPawnBitmap);
+                                pawnKnightChangeState.getWhiteState().setPawn(pawnKnightChangeState.getWhiteState().getPawn() & (~eightRowPawnBitmap));
+                                pawnKnightChangeState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(pawnKnightChangeState));
+                                possibleStates.add(pawnKnightChangeState);
+                            }
                         }
                     }
                 }

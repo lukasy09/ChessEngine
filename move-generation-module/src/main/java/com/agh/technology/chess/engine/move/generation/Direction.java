@@ -1,3 +1,5 @@
+package com.agh.technology.chess.engine.move.generation;
+
 public enum Direction {
     N,
     NE,
@@ -6,5 +8,5 @@ public enum Direction {
     S,
     SW,
     W,
-    NW;
+    NW
 }

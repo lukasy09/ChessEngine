@@ -1,12 +1,13 @@
+package com.agh.technology.chess.engine.move.generation;
+
+import com.agh.technology.chess.engine.model.element.Color;
 import com.agh.technology.chess.engine.model.element.PieceType;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class RayAttacks {
-    private static RayAttacks instance = null;
+public class AttackMasks {
+    private static AttackMasks instance = null;
     private Map<Integer,Map<Direction,Long>> attackRayMasks;
     private Map<PieceType,Map<Integer,Long>> attackMoves;
     private Map<PieceType,Map<Integer,Long>> blockersAndBeyond;
@@ -14,13 +15,20 @@ public class RayAttacks {
     private Map<Color,Map<Integer,Long>> pawnCaptureMoves;
     private Long[][] behind;
 
-    private RayAttacks(){
+    private AttackMasks(){
         initializeRays();
         initializeAttackMoves();
         initializeBlockersAndBeyond();
         initializeBehind();
         initializePawnMoves();
         initializePawnCaptureMoves();
+    }
+
+    public static AttackMasks getInstance(){
+        if(instance == null){
+            instance = new AttackMasks();
+        }
+        return instance;
     }
 
     private void initializeRays(){
@@ -219,12 +227,12 @@ public class RayAttacks {
         Map<Integer,Long> whitePawnCaptureMoves = new HashMap<>();
         for(int index = 0; index < 64; index++){
             long move = 0L;
-            if(index / 8 < 7){
-                if(index % 8 > 0){
-                    move = move & 1L << index + 7;
+            if((index / 8) < 7){
+                if((index % 8) > 0){
+                    move |= (1L << (index + 7));
                 }
-                if(index % 8 < 7){
-                    move = move & 1L << index + 9;
+                if((index % 8) < 7){
+                    move |= 1L << (index + 9);
                 }
                 whitePawnCaptureMoves.put(index, move);
             }else{
@@ -235,12 +243,12 @@ public class RayAttacks {
         Map<Integer,Long> blackPawnCaptureMoves = new HashMap<>();
         for(int index = 0; index < 64; index++){
             long move = 0L;
-            if(index / 8 > 0){
-                if(index % 8 > 0){
-                    move = move & 1L << index - 9;
+            if((index / 8) > 0){
+                if((index % 8) > 0){
+                    move |= (1L << (index - 9));
                 }
-                if(index % 8 < 7){
-                    move = move & 1L << index - 7;
+                if((index % 8) < 7){
+                    move |= (1L << (index - 7));
                 }
                 blackPawnCaptureMoves.put(index, move);
             }else{
@@ -252,26 +260,7 @@ public class RayAttacks {
         pawnCaptureMoves.put(Color.BLACK, blackPawnCaptureMoves);
     }
 
-    public static RayAttacks getInstance(){
-        if(instance == null){
-            instance = new RayAttacks();
-        }
-
-        return instance;
-    }
-
-
-    public static String displayAsFormattedBinary(long value){
-        String unreversedBoard = displayAsBinary(value).replaceAll("(.{8})", "$1\n");
-        return String.join("\n", Arrays.stream(unreversedBoard.split("\n")).map(line -> new StringBuilder(line).reverse().toString()).collect(Collectors.toList()));
-    }
-
-    public static String displayAsBinary(long value){
-        String binaryString = Long.toBinaryString(value);
-        return String.format("%64s", binaryString).replace(' ', '0');
-    }
-
-    public static long generateNorthRay(int index){
+    private static long generateNorthRay(int index){
         long mask = 1L << index;
         long ray = 0L;
 
@@ -282,7 +271,7 @@ public class RayAttacks {
         return ray;
     }
 
-    public static long generateSouthRay(int index){
+    private static long generateSouthRay(int index){
         long mask = 1L << index;
         long ray = 0L;
 
@@ -293,7 +282,7 @@ public class RayAttacks {
         return ray;
     }
 
-    public static long generateEastRay(int index){
+    private static long generateEastRay(int index){
         long mask = 1L << index;
         long ray = 0L;
 
@@ -304,7 +293,7 @@ public class RayAttacks {
         return ray;
     }
 
-    public static long generateWestRay(int index){
+    private static long generateWestRay(int index){
         long mask = 1L << index;
         long ray = 0L;
 
@@ -315,7 +304,7 @@ public class RayAttacks {
         return ray;
     }
 
-    public static long generateNorthEastRay(int index){
+    private static long generateNorthEastRay(int index){
         long mask = 1L << index;
         long ray = 0L;
 
@@ -326,7 +315,7 @@ public class RayAttacks {
         return ray;
     }
 
-    public static long generateNorthWestRay(int index){
+    private static long generateNorthWestRay(int index){
         long mask = 1L << index;
         long ray = 0L;
 
@@ -337,7 +326,7 @@ public class RayAttacks {
         return ray;
     }
 
-    public static long generateSouthEastRay(int index){
+    private static long generateSouthEastRay(int index){
         long mask = 1L << index;
         long ray = 0L;
 
@@ -348,7 +337,7 @@ public class RayAttacks {
         return ray;
     }
 
-    public static long generateSouthWestRay(int index){
+    private static long generateSouthWestRay(int index){
         long mask = 1L << index;
         long ray = 0L;
 
@@ -375,89 +364,7 @@ public class RayAttacks {
         return pawnMoves;
     }
 
-    public void setPawnMoves(Map<Color, Map<Integer, Long>> pawnMoves) {
-        this.pawnMoves = pawnMoves;
-    }
-
     public Map<Color, Map<Integer, Long>> getPawnCaptureMoves() {
         return pawnCaptureMoves;
-    }
-
-    public void setPawnCaptureMoves(Map<Color, Map<Integer, Long>> pawnCaptureMoves) {
-        this.pawnCaptureMoves = pawnCaptureMoves;
-    }
-
-    public static void main(String[] args) {
-
-        System.out.println(displayAsFormattedBinary(-9205322385119248384L));
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-
-        int index = 63;
-        System.out.println(displayAsFormattedBinary(generateNorthRay(index)));
-        System.out.println("");
-        System.out.println(displayAsFormattedBinary(generateSouthRay(index)));
-        System.out.println("");
-        System.out.println(displayAsFormattedBinary(generateEastRay(index)));
-        System.out.println("");
-        System.out.println(displayAsFormattedBinary(generateWestRay(index)));
-        System.out.println("");
-        System.out.println(displayAsFormattedBinary(generateNorthEastRay(index)));
-        System.out.println("");
-        System.out.println(displayAsFormattedBinary(generateNorthWestRay(index)));
-        System.out.println("");
-        System.out.println(displayAsFormattedBinary(generateSouthEastRay(index)));
-        System.out.println("");
-        System.out.println(displayAsFormattedBinary(generateSouthWestRay(index)));
-        System.out.println("");
-
-        System.out.println(displayAsFormattedBinary(
-                generateNorthRay(index)
-                        | generateNorthEastRay(index)
-                        | generateEastRay(index)
-                        | generateSouthEastRay(index)
-                        | generateSouthRay(index)
-                        | generateSouthWestRay(index)
-                        | generateWestRay(index)
-                        | generateNorthWestRay(index)
-        ));
-
-        RayAttacks intance = RayAttacks.getInstance();
-//        for(Map.Entry<Integer,Map<Direction,Long>> entry : intance.attackRayMasks.entrySet()){
-//            System.out.println(entry.getKey());
-//            System.out.println(displayAsFormattedBinary(
-//                    entry.getValue().get(Direction.N)
-//                            | entry.getValue().get(Direction.NE)
-//                            | entry.getValue().get(Direction.E)
-//                            | entry.getValue().get(Direction.SE)
-//                            | entry.getValue().get(Direction.S)
-//                            | entry.getValue().get(Direction.SW)
-//                            | entry.getValue().get(Direction.W)
-//                            | entry.getValue().get(Direction.NW)
-//            ));
-//            System.out.println("");
-//        }
-
-//        for(Map.Entry<PieceType,Map<Integer,Long>> entry : intance.attackMoves.entrySet()){
-//            System.out.println(entry.getKey());
-//            for(Map.Entry<Integer,Long> entry1 : entry.getValue().entrySet()){
-//                System.out.println(displayAsFormattedBinary(entry1.getValue()));
-//                System.out.println("");
-//            }
-//            System.out.println("");
-//        }
-
-        System.out.println("");System.out.println("");System.out.println("Behind");System.out.println("");System.out.println("");
-
-//        for(int i =0; i<64;i++){
-//            System.out.println(displayAsFormattedBinary(instance.behind[63][i]));
-//            System.out.println("");
-//        }
-
-        for(int i =0; i<64;i++){
-            System.out.println(displayAsFormattedBinary(instance.attackMoves.get(PieceType.KING).get(i)));
-            System.out.println("");
-        }
     }
 }

@@ -22,7 +22,7 @@
     </build>
 
     <modules>
-        <module>rays-module</module>
+        <module>move-generation-module</module>
         <module>score-evaluation</module>
         <module>chessboard-model</module>
     </modules>
