@@ -2,12 +2,12 @@ package com.agh.technology.chess.engine.model.state;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
-public class BoardState implements Comparable {
+public class BoardState {
 
     private BlackState blackState;
     private WhiteState whiteState;
-    private Integer boardEvaluation;
 
     public BoardState(){
         super();
@@ -49,16 +49,17 @@ public class BoardState implements Comparable {
         this.whiteState = whiteState;
     }
 
-    public Integer getBoardEvaluation() {
-        return boardEvaluation;
-    }
-
-    public void setBoardEvaluation(int boardEvaluation) {
-        this.boardEvaluation = boardEvaluation;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoardState that = (BoardState) o;
+        return Objects.equals(blackState, that.blackState) &&
+                Objects.equals(whiteState, that.whiteState);
     }
 
     @Override
-    public int compareTo(Object o) {
-        return getBoardEvaluation() != null ? getBoardEvaluation().compareTo(((BoardState) o).getBoardEvaluation()) : 0;
+    public int hashCode() {
+        return Objects.hash(blackState, whiteState);
     }
 }

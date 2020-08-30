@@ -2,6 +2,8 @@ package com.agh.technology.chess.engine.model.state;
 
 import com.agh.technology.chess.engine.model.element.PieceType;
 
+import java.util.Objects;
+
 public class WhiteState {
     private long king;
     private long queen;
@@ -126,5 +128,23 @@ public class WhiteState {
                 pawn = bitboard;
                 break;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WhiteState that = (WhiteState) o;
+        return king == that.king &&
+                queen == that.queen &&
+                rook == that.rook &&
+                bishop == that.bishop &&
+                knight == that.knight &&
+                pawn == that.pawn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(king, queen, rook, bishop, knight, pawn);
     }
 }

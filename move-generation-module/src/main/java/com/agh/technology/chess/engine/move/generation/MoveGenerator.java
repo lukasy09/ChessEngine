@@ -7,7 +7,9 @@ import com.agh.technology.chess.engine.model.state.BlackState;
 import com.agh.technology.chess.engine.model.state.BoardState;
 import com.agh.technology.chess.engine.model.state.WhiteState;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 public class MoveGenerator {
@@ -55,15 +57,15 @@ public class MoveGenerator {
 
 
 
-    public TreeSet<BoardState> generateNextPossibleStates(BoardState boardState, Color color){
+    public Set<BoardState> generateNextPossibleStates(BoardState boardState, Color color){
         if(color.equals(Color.WHITE)){
             return generateNextPossibleWhiteStates(boardState);
         } else{
             return generateNextPossibleBlackStates(boardState);
         }
     }
-    private TreeSet<BoardState> generateNextPossibleBlackStates(BoardState boardState){
-        TreeSet<BoardState> possibleStates = new TreeSet<>();
+    private Set<BoardState> generateNextPossibleBlackStates(BoardState boardState){
+        Set<BoardState> possibleStates = new HashSet<>();
         BlackState blackState = boardState.getBlackState();
         for(PieceType pieceType : PieceType.values()){
             long pieceBitmap = blackState.getPieceBitboard(pieceType);
@@ -76,7 +78,6 @@ public class MoveGenerator {
                         if((boardState.getWhiteState().getOccupied() & nextIndexBitboard) == 0L){
                             BoardState nextBoardState = new BoardState(boardState);
                             nextBoardState.getBlackState().setPieceBitboard(pieceType, (pieceBitmap & (~(1L << index))) | nextIndexBitboard);
-                            nextBoardState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(nextBoardState));
                             possibleStates.add(nextBoardState);
                         } else {
                             BoardState nextBoardState = new BoardState(boardState);
@@ -90,7 +91,6 @@ public class MoveGenerator {
                             }
                             //Check if pawn should be replaced with queen or knight
                             if((nextBoardState.getBlackState().getPawn() & FIRST_ROW_MASK) == 0){
-                                nextBoardState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(nextBoardState));
                                 possibleStates.add(nextBoardState);
                             }else{
                                 long firstRowPawnBitmap = nextBoardState.getBlackState().getPawn() & FIRST_ROW_MASK;
@@ -98,13 +98,11 @@ public class MoveGenerator {
                                 BoardState pawnQueenChangeState = new BoardState(nextBoardState);
                                 pawnQueenChangeState.getBlackState().setQueen(pawnQueenChangeState.getBlackState().getQueen() | firstRowPawnBitmap);
                                 pawnQueenChangeState.getBlackState().setPawn(pawnQueenChangeState.getBlackState().getPawn() & (~firstRowPawnBitmap));
-                                pawnQueenChangeState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(pawnQueenChangeState));
                                 possibleStates.add(pawnQueenChangeState);
 
                                 BoardState pawnKnightChangeState = new BoardState(nextBoardState);
                                 pawnKnightChangeState.getBlackState().setKnight(pawnKnightChangeState.getBlackState().getKnight() | firstRowPawnBitmap);
                                 pawnKnightChangeState.getBlackState().setPawn(pawnKnightChangeState.getBlackState().getPawn() & (~firstRowPawnBitmap));
-                                pawnKnightChangeState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(pawnKnightChangeState));
                                 possibleStates.add(pawnKnightChangeState);
                             }
                         }
@@ -115,8 +113,8 @@ public class MoveGenerator {
 
         return possibleStates;
     }
-    private TreeSet<BoardState> generateNextPossibleWhiteStates(BoardState boardState){
-        TreeSet<BoardState> possibleStates = new TreeSet<>();
+    private Set<BoardState> generateNextPossibleWhiteStates(BoardState boardState){
+        Set<BoardState> possibleStates = new HashSet<>();
         WhiteState whiteState = boardState.getWhiteState();
         for(PieceType pieceType : PieceType.values()){
             long pieceBitmap = whiteState.getPieceBitboard(pieceType);
@@ -129,7 +127,6 @@ public class MoveGenerator {
                         if((boardState.getBlackState().getOccupied() & nextIndexBitboard) == 0L){
                             BoardState nextBoardState = new BoardState(boardState);
                             nextBoardState.getWhiteState().setPieceBitboard(pieceType, (pieceBitmap & (~(1L << index))) | nextIndexBitboard);
-                            nextBoardState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(nextBoardState));
                             possibleStates.add(nextBoardState);
                         } else {
                             BoardState nextBoardState = new BoardState(boardState);
@@ -143,7 +140,6 @@ public class MoveGenerator {
                             }
                             //Check if pawn should be replaced with queen or knight
                             if((nextBoardState.getWhiteState().getPawn() & EIGHT_ROW_MASK) == 0){
-                                nextBoardState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(nextBoardState));
                                 possibleStates.add(nextBoardState);
                             }else{
                                 long eightRowPawnBitmap = nextBoardState.getWhiteState().getPawn() & EIGHT_ROW_MASK;
@@ -151,13 +147,11 @@ public class MoveGenerator {
                                 BoardState pawnQueenChangeState = new BoardState(nextBoardState);
                                 pawnQueenChangeState.getWhiteState().setQueen(pawnQueenChangeState.getWhiteState().getQueen() | eightRowPawnBitmap);
                                 pawnQueenChangeState.getWhiteState().setPawn(pawnQueenChangeState.getWhiteState().getPawn() & (~eightRowPawnBitmap));
-                                pawnQueenChangeState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(pawnQueenChangeState));
                                 possibleStates.add(pawnQueenChangeState);
 
                                 BoardState pawnKnightChangeState = new BoardState(nextBoardState);
                                 pawnKnightChangeState.getWhiteState().setKnight(pawnKnightChangeState.getWhiteState().getKnight() | eightRowPawnBitmap);
                                 pawnKnightChangeState.getWhiteState().setPawn(pawnKnightChangeState.getWhiteState().getPawn() & (~eightRowPawnBitmap));
-                                pawnKnightChangeState.setBoardEvaluation(ScoreEvaluation.getInstance().evaluateTotalRating(pawnKnightChangeState));
                                 possibleStates.add(pawnKnightChangeState);
                             }
                         }
