@@ -13,7 +13,12 @@ public class WhiteState {
     private long pawn;
 
     public WhiteState() {
-        super();
+        this.king = 0L;
+        this.queen = 0L;
+        this.rook = 0L;
+        this.bishop = 0L;
+        this.knight = 0L;
+        this.pawn = 0L;
     }
 
     public WhiteState(WhiteState stateToCopy){

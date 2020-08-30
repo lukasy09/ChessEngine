@@ -11,5 +11,13 @@
 
     <artifactId>gui-interface</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.agh.technology</groupId>
+            <artifactId>move-generation-module</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 
 </project>

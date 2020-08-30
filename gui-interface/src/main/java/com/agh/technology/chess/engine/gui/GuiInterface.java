@@ -1,5 +1,7 @@
 package com.agh.technology.chess.engine.gui;
 
+import com.agh.technology.chess.engine.move.generation.MoveGenerator;
+
 import java.util.Scanner;
 
 public class GuiInterface {
@@ -46,7 +48,7 @@ public class GuiInterface {
     }
 
     static void isReady() {
-        //ChessBoardFactory.initiateChessBoard();
+        MoveGenerator.getInstance();
         System.out.println("readyok");
     }
 

@@ -152,10 +152,47 @@ public class AttackMasks {
     private void initializeBlockersAndBeyond(){
         blockersAndBeyond = new HashMap<>();
         for(PieceType pieceType : PieceType.values()) {
-            if (pieceType.equals(PieceType.BISHOP) || pieceType.equals(PieceType.ROOK) || pieceType.equals(PieceType.QUEEN)) {
+            if (pieceType.equals(PieceType.BISHOP)){
                 Map<Integer, Long> blockersAndBeyondEntry = new HashMap<>();
-                attackMoves.get(pieceType).forEach((key, value) -> blockersAndBeyondEntry.put(key,
-                        value & 35604928818740736L));
+                for(int i = 0; i < 64; i++){
+                    blockersAndBeyondEntry.put(i,
+                            (attackRayMasks.get(i).get(Direction.NE)
+                                    | attackRayMasks.get(i).get(Direction.NW)
+                                    | attackRayMasks.get(i).get(Direction.SE)
+                                    | attackRayMasks.get(i).get(Direction.SW))
+                                    & 35604928818740736L);
+                }
+
+                blockersAndBeyond.put(pieceType, blockersAndBeyondEntry);
+            } else if (pieceType.equals(PieceType.QUEEN)) {
+                Map<Integer, Long> blockersAndBeyondEntry = new HashMap<>();
+                for (int i = 0; i < 64; i++) {
+                    blockersAndBeyondEntry.put(i,
+                            ((attackRayMasks.get(i).get(Direction.NE)
+                                    | attackRayMasks.get(i).get(Direction.NW)
+                                    | attackRayMasks.get(i).get(Direction.SE)
+                                    | attackRayMasks.get(i).get(Direction.SW))
+                                    & 35604928818740736L)
+                                    | ((attackRayMasks.get(i).get(Direction.E)
+                                    | attackRayMasks.get(i).get(Direction.W))
+                                    & 9114861777597660799L)
+                                    | ((attackRayMasks.get(i).get(Direction.N)
+                                    | attackRayMasks.get(i).get(Direction.S))
+                                    & 72057594037927681L));
+                }
+
+                blockersAndBeyond.put(pieceType, blockersAndBeyondEntry);
+            } else if (pieceType.equals(PieceType.ROOK)) {
+                Map<Integer, Long> blockersAndBeyondEntry = new HashMap<>();
+                for (int i = 0; i < 64; i++) {
+                    blockersAndBeyondEntry.put(i, ((attackRayMasks.get(i).get(Direction.E)
+                            | attackRayMasks.get(i).get(Direction.W))
+                            & 9114861777597660799L)
+                            | ((attackRayMasks.get(i).get(Direction.N)
+                            | attackRayMasks.get(i).get(Direction.S))
+                            & 72057594037927681L));
+                }
+
                 blockersAndBeyond.put(pieceType, blockersAndBeyondEntry);
             } else if(!pieceType.equals(PieceType.PAWN)){
                 Map<Integer, Long> blockersAndBeyondEntry = new HashMap<>();
@@ -194,10 +231,10 @@ public class AttackMasks {
         Map<Integer,Long> whitePawnMoves = new HashMap<>();
         for(int index = 0; index < 64; index++){
             if(index / 8 == 1){
-                long move = 1L << index + 8 & 1L << index + 16;
+                long move = (1L << (index + 8)) | (1L << (index + 16));
                 whitePawnMoves.put(index, move);
             }else if(index / 8 < 7){
-                long move = 1L << index + 8;
+                long move = 1L << (index + 8);
                 whitePawnMoves.put(index, move);
             }else{
                 whitePawnMoves.put(index, 0L);
@@ -207,13 +244,13 @@ public class AttackMasks {
         Map<Integer,Long> blackPawnMoves = new HashMap<>();
         for(int index = 0; index < 64; index++){
             if(index / 8 == 6){
-                long move = 1L << index - 8 & 1L << index - 16;
-                whitePawnMoves.put(index, move);
+                long move = (1L << (index - 8)) & (1L << (index - 16));
+                blackPawnMoves.put(index, move);
             }else if(index / 8 > 0){
-                long move = 1L << index - 8;
-                whitePawnMoves.put(index, move);
+                long move = 1L << (index - 8);
+                blackPawnMoves.put(index, move);
             }else{
-                whitePawnMoves.put(index, 0L);
+                blackPawnMoves.put(index, 0L);
             }
         }
 
@@ -232,7 +269,7 @@ public class AttackMasks {
                     move |= (1L << (index + 7));
                 }
                 if((index % 8) < 7){
-                    move |= 1L << (index + 9);
+                    move |= (1L << (index + 9));
                 }
                 whitePawnCaptureMoves.put(index, move);
             }else{
