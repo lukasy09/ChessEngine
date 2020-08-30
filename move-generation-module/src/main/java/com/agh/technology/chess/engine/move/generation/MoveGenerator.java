@@ -1,7 +1,6 @@
 package com.agh.technology.chess.engine.move.generation;
 
 import com.agh.technology.chess.engine.evaluation.ScoreEvaluation;
-import com.agh.technology.chess.engine.model.element.Board;
 import com.agh.technology.chess.engine.model.element.Color;
 import com.agh.technology.chess.engine.model.element.PieceType;
 import com.agh.technology.chess.engine.model.state.BlackState;
