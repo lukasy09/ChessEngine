@@ -122,6 +122,7 @@ public class MoveGenerator {
                     for(int nextIndex : availableIndexes){
                         long nextIndexBitboard = 1L << nextIndex;
                         BoardState nextBoardState = new BoardState(boardState);
+                        nextBoardState.setMove(new int[]{index, nextIndex});
                         nextBoardState.getWhiteState().setPieceBitboard(pieceType, (pieceBitmap & (~(1L << index))) | nextIndexBitboard);
                         if((boardState.getBlackState().getOccupied() & nextIndexBitboard) != 0L){
                             for(PieceType opponentPieceType : PieceType.values()){

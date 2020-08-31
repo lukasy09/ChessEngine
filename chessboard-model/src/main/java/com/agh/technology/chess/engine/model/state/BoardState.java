@@ -92,6 +92,7 @@ public class BoardState {
     public void applyUCIMove(String move, Color color){
         int indexFrom = translateUCIIndexToIntIndex(move.substring(0,2));
         int indexTo = translateUCIIndexToIntIndex(move.substring(2,4));
+        Character pawnPromotion = move.length() == 5 ? move.charAt(4) : null;
 
         if(Color.WHITE.equals(color)){
             for(PieceType pieceType : PieceType.values()){
@@ -126,10 +127,54 @@ public class BoardState {
                 }
             }
         }
+
+        if(pawnPromotion != null){
+            if(color.equals(Color.WHITE)){
+                whiteState.setPawn(whiteState.getPawn() & (~(1L << indexTo)));
+                switch (pawnPromotion){
+                    case 'q':
+                        whiteState.setQueen(whiteState.getQueen() | (1L << indexTo));
+                        break;
+                    case 'n':
+                        whiteState.setKnight(whiteState.getKnight() | (1L << indexTo));
+                        break;
+                    case 'r':
+                        whiteState.setRook(whiteState.getRook() | (1L << indexTo));
+                        break;
+                    case 'b':
+                        whiteState.setBishop(whiteState.getBishop() | (1L << indexTo));
+                        break;
+                }
+            } else {
+                blackState.setPawn(blackState.getPawn() & (~(1L << indexTo)));
+                switch (pawnPromotion){
+                    case 'q':
+                        blackState.setQueen(blackState.getQueen() | (1L << indexTo));
+                        break;
+                    case 'n':
+                        blackState.setKnight(blackState.getKnight() | (1L << indexTo));
+                        break;
+                    case 'r':
+                        blackState.setRook(blackState.getRook() | (1L << indexTo));
+                        break;
+                    case 'b':
+                        blackState.setBishop(blackState.getBishop() | (1L << indexTo));
+                        break;
+                }
+            }
+        }
     }
 
     private static int translateUCIIndexToIntIndex(String UCIIndex){
         return ((int)UCIIndex.charAt(0) - 97) + (Character.getNumericValue(UCIIndex.charAt(1)) - 1) * 8;
+    }
+
+    public static String translateIntIndexToUCIIndex(int index){
+        StringBuilder uciIndexBuilder = new StringBuilder();
+        uciIndexBuilder.append((char)((index%8) + 97));
+        uciIndexBuilder.append((index/8)+1);
+
+        return uciIndexBuilder.toString();
     }
 
     public static ArrayList<Integer> getPositionIndexes(long bitboard){
@@ -195,10 +240,6 @@ public class BoardState {
 
     public static void main(String[] args) {
 
-        BoardState board = BoardState.getStartingState();
-        board.applyUCIMove("e2e7", Color.WHITE);
-        System.out.println(Board.displayAsFormattedBinary(board.whiteState.getPawn()));
-        System.out.println();
-        System.out.println(Board.displayAsFormattedBinary(board.blackState.getPawn()));
+        System.out.println(translateIntIndexToUCIIndex(63));
     }
 }

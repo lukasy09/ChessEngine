@@ -13,19 +13,10 @@ public class MaterialRatingEvaluation {
     public int evaluateMaterialRating(BoardState boardState) {
         int materialScoreAccumulator = 0;
 
-        materialScoreAccumulator += accumulateMaterialRatingForPieceType(boardState.getWhiteState().getKing(), PieceType.KING);
-        materialScoreAccumulator += accumulateMaterialRatingForPieceType(boardState.getWhiteState().getQueen(), PieceType.QUEEN);
-        materialScoreAccumulator += accumulateMaterialRatingForPieceType(boardState.getWhiteState().getRook(), PieceType.ROOK);
-        materialScoreAccumulator += accumulateMaterialRatingForPieceType(boardState.getWhiteState().getBishop(), PieceType.BISHOP);
-        materialScoreAccumulator += accumulateMaterialRatingForPieceType(boardState.getWhiteState().getKnight(), PieceType.KNIGHT);
-        materialScoreAccumulator += accumulateMaterialRatingForPieceType(boardState.getWhiteState().getPawn(), PieceType.PAWN);
-
-        materialScoreAccumulator -= accumulateMaterialRatingForPieceType(boardState.getBlackState().getKing(), PieceType.KING);
-        materialScoreAccumulator -= accumulateMaterialRatingForPieceType(boardState.getBlackState().getQueen(), PieceType.QUEEN);
-        materialScoreAccumulator -= accumulateMaterialRatingForPieceType(boardState.getBlackState().getRook(), PieceType.ROOK);
-        materialScoreAccumulator -= accumulateMaterialRatingForPieceType(boardState.getBlackState().getBishop(), PieceType.BISHOP);
-        materialScoreAccumulator -= accumulateMaterialRatingForPieceType(boardState.getBlackState().getKnight(), PieceType.KNIGHT);
-        materialScoreAccumulator -= accumulateMaterialRatingForPieceType(boardState.getBlackState().getPawn(), PieceType.PAWN);
+        for(PieceType pieceType : PieceType.values()){
+            materialScoreAccumulator += accumulateMaterialRatingForPieceType(boardState.getWhiteState().getPieceBitboard(pieceType), pieceType);
+            materialScoreAccumulator -= accumulateMaterialRatingForPieceType(boardState.getBlackState().getPieceBitboard(pieceType), pieceType);
+        }
 
         return materialScoreAccumulator;
     }
@@ -42,25 +33,7 @@ public class MaterialRatingEvaluation {
 
     private int calculateMaterialValue(PieceType piece) {
         try {
-            switch (piece) {
-                case PAWN:
-                    return (int) calculatePieceMaterialValue(PieceType.PAWN);
-
-                case KNIGHT:
-                    return (int) calculatePieceMaterialValue(PieceType.KNIGHT);
-
-                case BISHOP:
-                    return (int) calculatePieceMaterialValue(PieceType.BISHOP);
-
-                case ROOK:
-                    return (int) calculatePieceMaterialValue(PieceType.ROOK);
-
-                case QUEEN:
-                    return (int) calculatePieceMaterialValue(PieceType.QUEEN);
-
-                case KING:
-                    return (int) calculatePieceMaterialValue(PieceType.KING);
-            }
+            return (int) calculatePieceMaterialValue(piece);
         } catch (Exception e) {
             e.printStackTrace();
         }
