@@ -33,6 +33,9 @@ public class Algorithm {
         if (Color.WHITE.equals(color)) {
             int maxEvaluation = Integer.MIN_VALUE;
             BoardState maxEvaluationState = null;
+            if(boardState.getWhiteState().getKing() == 0){
+                return new MinmaxPair(boardState, Integer.MIN_VALUE);
+            }
             Set<BoardState> children = moveGenerator.generateNextPossibleStates(boardState, Color.WHITE);
             for (BoardState child : children) {
                 int evaluation = minmax(child, depth - 1, Color.BLACK, alpha, beta).getEvaluation();
@@ -40,7 +43,7 @@ public class Algorithm {
                     maxEvaluation = evaluation;
                     maxEvaluationState = child;
                 }
-                alpha = Math.max(alpha,evaluation);
+                alpha = Math.max(alpha,maxEvaluation);
                 if(beta <= alpha){
                     break;
                 }
@@ -49,6 +52,9 @@ public class Algorithm {
         } else {
             int minEvaluation = Integer.MAX_VALUE;
             BoardState minEvaluationState = null;
+            if(boardState.getBlackState().getKing() == 0){
+                return new MinmaxPair(boardState, Integer.MAX_VALUE);
+            }
             Set<BoardState> children = moveGenerator.generateNextPossibleStates(boardState, Color.BLACK);
             for (BoardState child : children) {
                 int evaluation = minmax(child, depth - 1, Color.WHITE, alpha, beta).getEvaluation();
@@ -57,7 +63,7 @@ public class Algorithm {
                     minEvaluationState = child;
                 }
                 minEvaluation = Math.min(minEvaluation, evaluation);
-                beta = Math.min(beta,evaluation);
+                beta = Math.min(beta,minEvaluation);
                 if(beta <= alpha){
                     break;
                 }

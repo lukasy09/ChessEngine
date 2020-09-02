@@ -244,7 +244,7 @@ public class AttackMasks {
         Map<Integer,Long> blackPawnMoves = new HashMap<>();
         for(int index = 0; index < 64; index++){
             if(index / 8 == 6){
-                long move = (1L << (index - 8)) & (1L << (index - 16));
+                long move = (1L << (index - 8)) | (1L << (index - 16));
                 blackPawnMoves.put(index, move);
             }else if(index / 8 > 0){
                 long move = 1L << (index - 8);

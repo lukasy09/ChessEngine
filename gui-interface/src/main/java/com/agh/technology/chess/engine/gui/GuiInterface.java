@@ -91,7 +91,7 @@ public class GuiInterface {
     public static void go() {
         BoardState bestState;
         long startTime = System.currentTimeMillis();
-        bestState = new Algorithm().minmax(boardState,7, whitemove ? Color.WHITE : Color.BLACK);
+        bestState = new Algorithm().minmax(boardState,5, whitemove ? Color.WHITE : Color.BLACK);
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.out.println(elapsedTime);

@@ -93,10 +93,12 @@ public class BoardState {
         int indexFrom = translateUCIIndexToIntIndex(move.substring(0,2));
         int indexTo = translateUCIIndexToIntIndex(move.substring(2,4));
         Character pawnPromotion = move.length() == 5 ? move.charAt(4) : null;
+        PieceType pieceMoved = null;
 
         if(Color.WHITE.equals(color)){
             for(PieceType pieceType : PieceType.values()){
                 if((whiteState.getPieceBitboard(pieceType) & (1L << indexFrom)) != 0L){
+                    pieceMoved = pieceType;
                     whiteState.setPieceBitboard(pieceType, (whiteState.getPieceBitboard(pieceType) & (~(1L << indexFrom))) | 1L << indexTo);
                     if((blackState.getOccupied() & (1L << indexTo)) != 0L){
                         for(PieceType opponentPieceType : PieceType.values()){
@@ -113,6 +115,7 @@ public class BoardState {
         } else{
             for(PieceType pieceType : PieceType.values()){
                 if((blackState.getPieceBitboard(pieceType) & (1L << indexFrom)) != 0L){
+                    pieceMoved = pieceType;
                     blackState.setPieceBitboard(pieceType, (blackState.getPieceBitboard(pieceType) & (~(1L << indexFrom))) | 1L << indexTo);
                     if((whiteState.getOccupied() & (1L << indexTo)) != 0L){
                         for(PieceType opponentPieceType : PieceType.values()){
@@ -161,6 +164,18 @@ public class BoardState {
                         blackState.setBishop(blackState.getBishop() | (1L << indexTo));
                         break;
                 }
+            }
+        }
+        //detect castling move
+        if(PieceType.KING.equals(pieceMoved)){
+            if(indexFrom == 4 && indexTo == 6){
+                whiteState.setRook((whiteState.getRook() & (~(1L << 7))) | (1L << 5));
+            } else if(indexFrom == 4 && indexTo == 2){
+                whiteState.setRook((whiteState.getRook() & (~1L)) | (1L << 3));
+            } else if(indexFrom == 60 && indexTo == 62){
+                blackState.setRook((blackState.getRook() & (~(1L << 63))) | (1L << 61));
+            } else if(indexFrom == 60 && indexTo == 58){
+                blackState.setRook((blackState.getRook() & (~(1L << 56))) | (1L << 59));
             }
         }
     }

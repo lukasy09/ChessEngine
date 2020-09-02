@@ -47,7 +47,14 @@ public class MoveGenerator {
         if(!pieceType.equals(PieceType.PAWN)){
             throw new UnsupportedOperationException();
         }
-        long nonCaptureMoves = attackMasks.getPawnMoves().get(color).get(pieceIndex) & ~boardState.getOccupied();
+
+        long nonCaptureMoves;
+        if(Color.WHITE.equals(color)){
+            nonCaptureMoves = attackMasks.getPawnMoves().get(color).get(pieceIndex) & ~(boardState.getOccupied() | ((boardState.getOccupied() << 8) &~(1L << (pieceIndex + 8))));
+        }else{
+            nonCaptureMoves = attackMasks.getPawnMoves().get(color).get(pieceIndex) & ~(boardState.getOccupied() | ((boardState.getOccupied() >>> 8) &~(1L << (pieceIndex - 8))));
+        }
+
         long captureMoves = attackMasks.getPawnCaptureMoves().get(color).get(pieceIndex) & (color.equals(Color.BLACK) ? boardState.getWhiteState().getOccupied() : boardState.getBlackState().getOccupied());
 
         return captureMoves | nonCaptureMoves;
