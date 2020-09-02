@@ -36,27 +36,27 @@ public class PositionRatingEvaluation {
         for(int index : BoardState.getPositionIndexes(bitboard)){
             switch (pieceType) {
                 case PAWN:
-                    score += PieceHeatMap.getPawnMap()[color][index / 8][index % 8];
+                    score += PieceHeatMap.getPawnMap()[color][7 - (index / 8)][index % 8];
                     break;
 
                 case KNIGHT:
-                    score += PieceHeatMap.getKnightMap()[color][index / 8][index % 8];
+                    score += PieceHeatMap.getKnightMap()[color][7 - (index / 8)][index % 8];
                     break;
 
                 case BISHOP:
-                    score += PieceHeatMap.getBishopMap()[color][index / 8][index % 8];
+                    score += PieceHeatMap.getBishopMap()[color][7 - (index / 8)][index % 8];
                     break;
 
                 case ROOK:
-                    score += PieceHeatMap.getRookMap()[color][index / 8][index % 8];
+                    score += PieceHeatMap.getRookMap()[color][7 - (index / 8)][index % 8];
                     break;
 
                 case QUEEN:
-                    score += PieceHeatMap.getQueenMap()[color][index / 8][index % 8];
+                    score += PieceHeatMap.getQueenMap()[color][7 - (index / 8)][index % 8];
                     break;
 
                 case KING:
-                    score += PieceHeatMap.getKingMap()[color][index / 8][index % 8];
+                    score += PieceHeatMap.getKingMap()[color][7 - (index / 8)][index % 8];
                     break;
             }
         }

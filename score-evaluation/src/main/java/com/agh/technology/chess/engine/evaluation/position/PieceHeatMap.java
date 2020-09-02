@@ -1,10 +1,5 @@
 package com.agh.technology.chess.engine.evaluation.position;
 
-import com.agh.technology.chess.engine.model.element.PieceType;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class PieceHeatMap {
 
     private static final int[][][] PAWN_MAP = {
