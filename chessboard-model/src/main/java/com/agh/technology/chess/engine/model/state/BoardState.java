@@ -39,7 +39,10 @@ public class BoardState {
     public BoardState(BoardState stateToCopy){
         this.whiteState = new WhiteState(stateToCopy.whiteState);
         this.blackState = new BlackState(stateToCopy.blackState);
+        this.move = stateToCopy.getMove();
+        this.pawnPromotion = stateToCopy.getPawnPromotion();
     }
+
 
     public static BoardState getStartingState(){
         BoardState initialState = new BoardState();
