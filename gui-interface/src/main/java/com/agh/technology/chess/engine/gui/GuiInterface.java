@@ -91,15 +91,20 @@ public class GuiInterface {
     public static void go() {
         BoardState bestState;
         long startTime = System.currentTimeMillis();
-        bestState = new Algorithm().minmax(boardState,5, whitemove ? Color.WHITE : Color.BLACK);
+        bestState = new Algorithm().minmax(boardState,6, whitemove ? Color.WHITE : Color.BLACK);
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.out.println(elapsedTime);
-        System.out.println(
-                "bestmove " + BoardState.translateIntIndexToUCIIndex(bestState.getMove()[0])
-                        + BoardState.translateIntIndexToUCIIndex(bestState.getMove()[1])
-                        + (bestState.getPawnPromotion() != null ? bestState.getPawnPromotion() : "")
-        );
+        if(boardState != null){
+            System.out.println(
+                    "bestmove " + BoardState.translateIntIndexToUCIIndex(bestState.getMove()[0])
+                            + BoardState.translateIntIndexToUCIIndex(bestState.getMove()[1])
+                            + (bestState.getPawnPromotion() != null ? bestState.getPawnPromotion() : "")
+            );
+        } else{
+            System.out.println("stop");
+        }
+
     }
 
     static void print() {
