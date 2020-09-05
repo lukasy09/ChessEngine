@@ -1,9 +1,15 @@
+import com.agh.technology.chess.engine.model.element.PieceType;
+import com.agh.technology.chess.engine.model.state.BlackState;
 import com.agh.technology.chess.engine.model.state.BoardState;
+import com.agh.technology.chess.engine.model.state.WhiteState;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.io.*;
 
 public class BoardStateTest {
 
@@ -15,6 +21,9 @@ public class BoardStateTest {
     public static String displayAsBinary(long value){
         String binaryString = Long.toBinaryString(value);
         return String.format("%64s", binaryString).replace(' ', '0');
+    }
+    private static long parseLong(String s, int base) {
+        return new BigInteger(s.replaceAll(" ", ""), base).longValue();
     }
 
     @Test
@@ -98,6 +107,211 @@ public class BoardStateTest {
         Assert.assertEquals(bpawn,actualbpawn);
         Assert.assertEquals(bqueen,actualbqueen);
         Assert.assertEquals(brook,actualbrook);
+    }
+    @Test
+    public void setStatePerFigure() throws Exception
+    {
+        BoardState boardState = BoardState.getStartingState();
+
+        Long bishop = parseLong("00100100 00000000 000000000000000000000000000000000000000000000000",2);
+        Long king = parseLong("00000000 10000000000000000000000000000000000000000000000000000000", 2);
+        Long knight = parseLong("00000000 00100000000000000000000000000000000000000000000000000000", 2);
+        Long pawn = parseLong("00000000 00000000 100000000000000000000000000000000000000000000000", 2);
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+        Long rook = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+
+        boardState.getBlackState().setBishop(bishop);
+        boardState.getBlackState().setKing(king);
+        boardState.getBlackState().setKnight(knight);
+        boardState.getBlackState().setPawn(pawn);
+        boardState.getBlackState().setQueen(queen);
+        boardState.getBlackState().setRook(rook);
+
+        Long actualbishop = boardState.getBlackState().getBishop();
+        Long actualking = boardState.getBlackState().getKing();
+        Long actualknight = boardState.getBlackState().getKnight();
+        Long actualpawn = boardState.getBlackState().getPawn();
+        Long actualqueen = boardState.getBlackState().getQueen();
+        Long actualrook = boardState.getBlackState().getRook();
+
+        Assert.assertEquals(bishop,actualbishop);
+        Assert.assertEquals(king,actualking);
+        Assert.assertEquals(knight,actualknight);
+        Assert.assertEquals(pawn,actualpawn);
+        Assert.assertEquals(queen,actualqueen);
+        Assert.assertEquals(rook,actualrook);
+    }
+
+    @Test
+    public void setState() throws Exception
+    {
+        BoardState boardState = BoardState.getStartingState();
+
+        Long bishop = parseLong("00100100 00000000 000000000000000000000000000000000000000000000000",2);
+        Long king = parseLong("00000000 10000000000000000000000000000000000000000000000000000000", 2);
+        Long knight = parseLong("00000000 00100000000000000000000000000000000000000000000000000000", 2);
+        Long pawn = parseLong("00000000 00000000 100000000000000000000000000000000000000000000000", 2);
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+        Long rook = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+        boardState.getBlackState().setBishop(bishop);
+        boardState.getBlackState().setKing(king);
+        boardState.getBlackState().setKnight(knight);
+        boardState.getBlackState().setPawn(pawn);
+        boardState.getBlackState().setQueen(queen);
+        boardState.getBlackState().setRook(rook);
+
+        Long occupied = king | queen| rook| bishop| knight| pawn;
+        Long actuallyoccupied = boardState.getBlackState().getOccupied();
+
+
+        Assert.assertEquals(occupied,actuallyoccupied);
+
+    }
+
+    @Test
+    public void stateToCopy() throws Exception {
+        BoardState boardState = BoardState.getStartingState();
+
+        Long bishop = parseLong("00100100 00000000 000000000000000000000000000000000000000000000000",2);
+        Long king = parseLong("00000000 10000000000000000000000000000000000000000000000000000000", 2);
+        Long knight = parseLong("00000000 00100000000000000000000000000000000000000000000000000000", 2);
+        Long pawn = parseLong("00000000 00000000 100000000000000000000000000000000000000000000000", 2);
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+        Long rook = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+        boardState.getBlackState().setBishop(bishop);
+        boardState.getBlackState().setKing(king);
+        boardState.getBlackState().setKnight(knight);
+        boardState.getBlackState().setPawn(pawn);
+        boardState.getBlackState().setQueen(queen);
+        boardState.getBlackState().setRook(rook);
+
+        BoardState actualBoardState = new BoardState(boardState);
+
+        Assert.assertEquals( boardState.getBlackState().getOccupied(),actualBoardState.getBlackState().getOccupied());
+    }
+
+    @Test
+    public void getOccupied() throws Exception {
+        BoardState boardState = BoardState.getStartingState();
+
+        Long bishop = parseLong("00100100 00000000 000000000000000000000000000000000000000000000000",2);
+        Long king = parseLong("00000000 10000000000000000000000000000000000000000000000000000000", 2);
+        Long knight = parseLong("00000000 00100000000000000000000000000000000000000000000000000000", 2);
+        Long pawn = parseLong("00000000 00000000 100000000000000000000000000000000000000000000000", 2);
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+        Long rook = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+        boardState.getBlackState().setBishop(bishop);
+        boardState.getBlackState().setKing(king);
+        boardState.getBlackState().setKnight(knight);
+        boardState.getBlackState().setPawn(pawn);
+        boardState.getBlackState().setQueen(queen);
+        boardState.getBlackState().setRook(rook);
+
+
+
+        Assert.assertEquals( 2639250256566484991l,boardState.getOccupied());
+    }
+
+    @Test
+    public void setBlackStateTest() throws Exception {
+        BoardState boardState = BoardState.getStartingState();
+
+        Long bishop = parseLong("00100100 00000000 000000000000000000000000000000000000000000000000",2);
+        Long king = parseLong("00000000 10000000000000000000000000000000000000000000000000000000", 2);
+        Long knight = parseLong("00000000 00100000000000000000000000000000000000000000000000000000", 2);
+        Long pawn = parseLong("00000000 00000000 100000000000000000000000000000000000000000000000", 2);
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+        Long rook = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+        boardState.getBlackState().setBishop(bishop);
+        boardState.getBlackState().setKing(king);
+        boardState.getBlackState().setKnight(knight);
+        boardState.getBlackState().setPawn(pawn);
+        boardState.getBlackState().setQueen(queen);
+        boardState.getBlackState().setRook(rook);
+
+        BoardState actualBoardState = BoardState.getStartingState();
+
+        actualBoardState.setBlackState(boardState.getBlackState());
+
+        Assert.assertEquals( boardState.getBlackState(),actualBoardState.getBlackState());
+    }
+
+    @Test
+    public void setWhiteStateTest() throws Exception {
+        BoardState boardState = BoardState.getStartingState();
+
+        Long bishop = parseLong("00100100 00000000 000000000000000000000000000000000000000000000000",2);
+        Long king = parseLong("00000000 10000000000000000000000000000000000000000000000000000000", 2);
+        Long knight = parseLong("00000000 00100000000000000000000000000000000000000000000000000000", 2);
+        Long pawn = parseLong("00000000 00000000 100000000000000000000000000000000000000000000000", 2);
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+        Long rook = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+        boardState.getWhiteState().setBishop(bishop);
+        boardState.getWhiteState().setKing(king);
+        boardState.getWhiteState().setKnight(knight);
+        boardState.getWhiteState().setPawn(pawn);
+        boardState.getWhiteState().setQueen(queen);
+        boardState.getWhiteState().setRook(rook);
+
+        BoardState actualBoardState = BoardState.getStartingState();
+
+        actualBoardState.setWhiteState(boardState.getWhiteState());
+
+        Assert.assertEquals( boardState.getWhiteState(),actualBoardState.getWhiteState());
+    }
+
+    @Test
+    public void getPawnPromotionTest() throws Exception {
+        Character pawnPromotion = 'c';
+        BoardState actualBoardState = BoardState.getStartingState();
+        actualBoardState.setPawnPromotion('c');
+
+
+        Assert.assertEquals(pawnPromotion,actualBoardState.getPawnPromotion());
+    }
+    @Test
+    public void getMoveTest() throws Exception {
+        int[] move = new int[3];
+        BoardState actualBoardState = BoardState.getStartingState();
+        actualBoardState.setMove(move);
+
+
+        Assert.assertEquals(move,actualBoardState.getMove());
+    }
+
+    @Test
+    public void hashCodeTest() throws Exception {
+
+        BoardState actualBoardState = BoardState.getStartingState();
+
+        Assert.assertEquals(-22879270l,actualBoardState.hashCode());
+    }
+    @Test
+    public void setPieceBitboardWhiteTest() throws Exception {
+
+        BoardState actualBoardState = BoardState.getStartingState();
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+        actualBoardState.getWhiteState().setPieceBitboard(PieceType.QUEEN,queen);
+        Long actualqueen = actualBoardState.getWhiteState().getPieceBitboard(PieceType.QUEEN);
+        Assert.assertEquals(queen,actualqueen);
+    }
+
+    @Test
+    public void setPieceBitboardBlackTest() throws Exception {
+
+        BoardState actualBoardState = BoardState.getStartingState();
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+        actualBoardState.getBlackState().setPieceBitboard(PieceType.QUEEN,queen);
+        Long actualqueen = actualBoardState.getBlackState().getPieceBitboard(PieceType.QUEEN);
+        Assert.assertEquals(queen,actualqueen);
     }
 
 }
