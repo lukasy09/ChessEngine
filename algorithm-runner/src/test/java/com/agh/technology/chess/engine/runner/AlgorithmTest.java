@@ -25,7 +25,7 @@ public class AlgorithmTest {
         return Arrays.stream(unreversedBoard.split("\n")).map(line -> new StringBuilder(line).reverse().toString()).collect(Collectors.joining("\n"));
     }
     @Test
-    public void minmaxTest() throws Exception {
+    public void minmaxBothKingsTest() throws Exception {
         BoardState boardState = BoardState.getStartingState();
 
         Algorithm algorithm = new Algorithm();
@@ -64,7 +64,129 @@ public class AlgorithmTest {
         Assert.assertEquals(expectedOccupied, actualOccupied) ;
 
     }
+    @Test
+    public void minmaxWhiteKingsTest() throws Exception {
+        BoardState boardState = BoardState.getStartingState();
+
+        Algorithm algorithm = new Algorithm();
+
+        Long bishop = parseLong("00100100 00000000 000000000000000000000000000000000000000000000000", 2);
+        Long king = parseLong("00000000 00000000000000000000000000000000000000000000000000000000", 2);
+        Long knight = parseLong("00000000 00100000000000000000000000000000000000000000000000000000", 2);
+        Long pawn = parseLong("00000000 00000000 100000000000000000000000000000000000000000000000", 2);
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+        Long rook = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+        Long wking = parseLong("00000000 00010000000000000000000000000000000000000000000000000000", 2);
+        Long wknight = parseLong("00000000 00000001000000000000000000000000000000000000000000000000", 2);
+        Long wbishop = parseLong("00000000 00000000 000000000000000000000000000000000000000000000000", 2);
+        Long wpawn = parseLong("00000000 00000000 000000000000000000000000000000000000000011111111", 2);
+        Long wqueen = parseLong("00000000 00000000 00000000 0000000000000000000000000000000000000000", 2);
+        Long wrook = parseLong("00000000 00000000 00000000 0000000000000000000000000000000000000000", 2);
+
+        boardState.getBlackState().setBishop(bishop);
+        boardState.getBlackState().setKing(king);
+        boardState.getBlackState().setKnight(knight);
+        boardState.getBlackState().setPawn(pawn);
+        boardState.getBlackState().setQueen(queen);
+        boardState.getBlackState().setRook(rook);
+
+        boardState.getWhiteState().setBishop(wbishop);
+        boardState.getWhiteState().setKing(wking);
+        boardState.getWhiteState().setKnight(wknight);
+        boardState.getWhiteState().setPawn(wpawn);
+        boardState.getWhiteState().setQueen(wqueen);
+        boardState.getWhiteState().setRook(wrook);
+
+        BoardState actualboardState = algorithm.minmax(boardState, 3, Color.WHITE);
+        Long expectedOccupied = parseLong("00100100 00110000 10000000 00100000 00000000 00000000 00000000 11111111", 2);
+        Long actualOccupied = actualboardState.getOccupied();
+        //
+        Assert.assertEquals(displayAsFormattedBinary(expectedOccupied), displayAsFormattedBinary(actualOccupied));
+    }
+    @Test
+    public void minmaxBlackKingsTest() throws Exception {
+        BoardState boardState = BoardState.getStartingState();
+
+        Algorithm algorithm = new Algorithm();
+
+        Long bishop = parseLong("00100100 00000000 000000000000000000000000000000000000000000000000", 2);
+        Long king = parseLong("00000000 10000000000000000000000000000000000000000000000000000000", 2);
+        Long knight = parseLong("00000000 00100000000000000000000000000000000000000000000000000000", 2);
+        Long pawn = parseLong("00000000 00000000 100000000000000000000000000000000000000000000000", 2);
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+        Long rook = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+        Long wking = parseLong("00000000 00000000000000000000000000000000000000000000000000000000", 2);
+        Long wknight = parseLong("00000000 00000001000000000000000000000000000000000000000000000000", 2);
+        Long wbishop = parseLong("00000000 00000000 000000000000000000000000000000000000000000000000", 2);
+        Long wpawn = parseLong("00000000 00000000 000000000000000000000000000000000000000011111111", 2);
+        Long wqueen = parseLong("00000000 00000000 00000000 0000000000000000000000000000000000000000", 2);
+        Long wrook = parseLong("00000000 00000000 00000000 0000000000000000000000000000000000000000", 2);
+
+        boardState.getBlackState().setBishop(bishop);
+        boardState.getBlackState().setKing(king);
+        boardState.getBlackState().setKnight(knight);
+        boardState.getBlackState().setPawn(pawn);
+        boardState.getBlackState().setQueen(queen);
+        boardState.getBlackState().setRook(rook);
+
+        boardState.getWhiteState().setBishop(wbishop);
+        boardState.getWhiteState().setKing(wking);
+        boardState.getWhiteState().setKnight(wknight);
+        boardState.getWhiteState().setPawn(wpawn);
+        boardState.getWhiteState().setQueen(wqueen);
+        boardState.getWhiteState().setRook(wrook);
+
+        BoardState actualboardState = algorithm.minmax(boardState, 3, Color.WHITE);
+        Long expectedOccupied = parseLong("00100100 10100001 10000000 00100000 00000000 00000000 00000000 11111111", 2);
+        Long actualOccupied = actualboardState.getOccupied();
+        //
+        Assert.assertEquals(displayAsFormattedBinary(expectedOccupied), displayAsFormattedBinary(actualOccupied));
+    }
+    @Test
+    public void minmaxNoKingsTest() throws Exception {
+        BoardState boardState = BoardState.getStartingState();
+
+        Algorithm algorithm = new Algorithm();
+
+        Long bishop = parseLong("00100100 00000000 000000000000000000000000000000000000000000000000", 2);
+        Long king = parseLong("00000000 00000000000000000000000000000000000000000000000000000000", 2);
+        Long knight = parseLong("00000000 00100000000000000000000000000000000000000000000000000000", 2);
+        Long pawn = parseLong("00000000 00000000 100000000000000000000000000000000000000000000000", 2);
+        Long queen = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+        Long rook = parseLong("00000000 00000000 00000000 0010000000000000000000000000000000000000", 2);
+
+        Long wking = parseLong("00000000 00000000000000000000000000000000000000000000000000000000", 2);
+        Long wknight = parseLong("00000000 00000001000000000000000000000000000000000000000000000000", 2);
+        Long wbishop = parseLong("00000000 00000000 000000000000000000000000000000000000000000000000", 2);
+        Long wpawn = parseLong("00000000 00000000 000000000000000000000000000000000000000011111111", 2);
+        Long wqueen = parseLong("00000000 00000000 00000000 0000000000000000000000000000000000000000", 2);
+        Long wrook = parseLong("00000000 00000000 00000000 0000000000000000000000000000000000000000", 2);
+
+        boardState.getBlackState().setBishop(bishop);
+        boardState.getBlackState().setKing(king);
+        boardState.getBlackState().setKnight(knight);
+        boardState.getBlackState().setPawn(pawn);
+        boardState.getBlackState().setQueen(queen);
+        boardState.getBlackState().setRook(rook);
+
+        boardState.getWhiteState().setBishop(wbishop);
+        boardState.getWhiteState().setKing(wking);
+        boardState.getWhiteState().setKnight(wknight);
+        boardState.getWhiteState().setPawn(wpawn);
+        boardState.getWhiteState().setQueen(wqueen);
+        boardState.getWhiteState().setRook(wrook);
+
+        BoardState actualboardState = algorithm.minmax(boardState, 3, Color.WHITE);
+        Long expectedOccupied = parseLong("00100100 00100001 10000000 00100000 00000000 00000000 00000000 11111111", 2);
+        Long actualOccupied = actualboardState.getOccupied();
+        //
+        Assert.assertEquals(expectedOccupied, actualOccupied);
+    }
 
 
 
-}
+
+
+    }
