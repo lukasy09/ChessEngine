@@ -101,6 +101,11 @@ public class BoardState {
         if(Color.WHITE.equals(color)){
             for(PieceType pieceType : PieceType.values()){
                 if((whiteState.getPieceBitboard(pieceType) & (1L << indexFrom)) != 0L){
+                    if(PieceType.PAWN.equals(pieceType)){
+                        if((indexTo == (indexFrom + 7) || indexTo == (indexFrom + 9)) && ((blackState.getOccupied() & (1L << indexTo)) == 0L)){
+                            blackState.setPawn(blackState.getPawn() & ~(1L << (indexTo - 8)));
+                        }
+                    }
                     pieceMoved = pieceType;
                     whiteState.setPieceBitboard(pieceType, (whiteState.getPieceBitboard(pieceType) & (~(1L << indexFrom))) | 1L << indexTo);
                     if((blackState.getOccupied() & (1L << indexTo)) != 0L){
@@ -118,6 +123,11 @@ public class BoardState {
         } else{
             for(PieceType pieceType : PieceType.values()){
                 if((blackState.getPieceBitboard(pieceType) & (1L << indexFrom)) != 0L){
+                    if(PieceType.PAWN.equals(pieceType)){
+                        if((indexTo == (indexFrom - 7) || indexTo == (indexFrom - 9)) && ((whiteState.getOccupied() & (1L << indexTo)) == 0L)){
+                            whiteState.setPawn(whiteState.getPawn() & ~(1L << (indexTo + 8)));
+                        }
+                    }
                     pieceMoved = pieceType;
                     blackState.setPieceBitboard(pieceType, (blackState.getPieceBitboard(pieceType) & (~(1L << indexFrom))) | 1L << indexTo);
                     if((whiteState.getOccupied() & (1L << indexTo)) != 0L){
