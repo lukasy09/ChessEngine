@@ -139,7 +139,7 @@ public class AlgorithmTest {
         boardState.getWhiteState().setRook(wrook);
 
         BoardState actualboardState = algorithm.minmax(boardState, 3, Color.WHITE);
-        Long expectedOccupied = parseLong("00100100 10100001 10000000 00100000 00000000 00000000 00000000 11111111", 2);
+        Long expectedOccupied = parseLong("00100100 10100000 10000000 00100000 00000000 00000000 00000000 11111111", 2);
         Long actualOccupied = actualboardState.getOccupied();
         //
         Assert.assertEquals(displayAsFormattedBinary(expectedOccupied), displayAsFormattedBinary(actualOccupied));
@@ -179,7 +179,7 @@ public class AlgorithmTest {
         boardState.getWhiteState().setRook(wrook);
 
         BoardState actualboardState = algorithm.minmax(boardState, 3, Color.WHITE);
-        Long expectedOccupied = parseLong("00100100 00100001 10000000 00100000 00000000 00000000 00000000 11111111", 2);
+        Long expectedOccupied = parseLong("00100100 00100000 10000000 00100000 00000000 00000000 00000000 11111111", 2);
         Long actualOccupied = actualboardState.getOccupied();
         //
         Assert.assertEquals(expectedOccupied, actualOccupied);
