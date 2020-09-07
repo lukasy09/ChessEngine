@@ -39,10 +39,8 @@ public class GuiInterface {
     }
 
     static void inputUCI() {
-        System.out.println("id name ChessEngineProject");
+        System.out.println("id name Grim Reaper");
         System.out.println("id author ChessEngineTeam");
-        //ChessBoardFactory.initiateChessBoard();
-        //MoveIterator.PLAYER = MoveIterator.PLAYER_BLACK;
         System.out.println("uciok");
     }
 
@@ -95,7 +93,7 @@ public class GuiInterface {
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.out.println(elapsedTime);
-        if(boardState != null){
+        if(bestState != null){
             System.out.println(
                     "bestmove " + BoardState.translateIntIndexToUCIIndex(bestState.getMove()[0])
                             + BoardState.translateIntIndexToUCIIndex(bestState.getMove()[1])
@@ -108,15 +106,11 @@ public class GuiInterface {
     }
 
     static void print() {
-        //GenerateBoard.drawboard(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK);
     }
 
     static void quit() {
         System.out.println("It was a good game");
     }
-
-
-
 
     public static void main(String[] args) {
         communicateToUCI();

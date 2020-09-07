@@ -1,14 +1,13 @@
 package com.agh.technology.chess.engine.model.state;
 
-import com.agh.technology.chess.engine.model.element.Board;
 import com.agh.technology.chess.engine.model.element.Color;
 import com.agh.technology.chess.engine.model.element.ColorPiece;
 import com.agh.technology.chess.engine.model.element.PieceType;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.agh.technology.chess.engine.model.element.ColorPiece.*;
 import static com.agh.technology.chess.engine.model.element.ColorPiece.WR;
@@ -30,6 +29,16 @@ public class BoardState {
             {BP, BP, BP, BP, BP, BP, BP, BP},
             {BR, BN, BB, BQ, BK, BB, BN, BR}
     };
+
+    public static String displayAsFormattedBinary(long value){
+        String unreversedBoard = displayAsBinary(value).replaceAll("(.{8})", "$1\n");
+        return Arrays.stream(unreversedBoard.split("\n")).map(line -> new StringBuilder(line).reverse().toString()).collect(Collectors.joining("\n"));
+    }
+
+    public static String displayAsBinary(long value){
+        String binaryString = Long.toBinaryString(value);
+        return String.format("%64s", binaryString).replace(' ', '0');
+    }
 
     public BoardState(){
         this.blackState = new BlackState();
@@ -266,8 +275,4 @@ public class BoardState {
         this.pawnPromotion = pawnPromotion;
     }
 
-    public static void main(String[] args) {
-
-        System.out.println(translateIntIndexToUCIIndex(63));
-    }
 }

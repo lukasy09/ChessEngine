@@ -68,15 +68,6 @@ public class Algorithm {
             return new MinmaxPair(minEvaluationState, minEvaluation);
         }
     }
-
-    public static void main(String[] args) {
-        Algorithm algorithm = new Algorithm();
-        Set<BoardState> boardStateSet = MoveGenerator.getInstance().generateNextPossibleStates(BoardState.getStartingState(), Color.WHITE);
-        for (BoardState state : boardStateSet){
-            System.out.println(algorithm.minmax(state,7, Color.BLACK));
-        }
-
-    }
 };
 
 
