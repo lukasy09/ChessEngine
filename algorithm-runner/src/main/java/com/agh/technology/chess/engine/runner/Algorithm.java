@@ -22,7 +22,7 @@ public class Algorithm {
     }
 
     private MinmaxPair minmax(BoardState boardState, int depth, Color color, int alpha, int beta) {
-
+        boolean noKing = false;
         if (depth == 0) {
             return new MinmaxPair(boardState, scoreEvaluation.evaluateTotalRating(boardState));
         }
@@ -31,7 +31,7 @@ public class Algorithm {
             int maxEvaluation = Integer.MIN_VALUE;
             BoardState maxEvaluationState = null;
             if(boardState.getWhiteState().getKing() == 0){
-                return new MinmaxPair(boardState, Integer.MIN_VALUE);
+                noKing = true;
             }
             Set<BoardState> children = moveGenerator.generateNextPossibleStates(boardState, Color.WHITE);
             for (BoardState child : children) {
@@ -45,12 +45,15 @@ public class Algorithm {
                     break;
                 }
             }
+            if(noKing){
+                maxEvaluation = (Integer.MIN_VALUE / 2) - depth;
+            }
             return new MinmaxPair(maxEvaluationState, maxEvaluation);
         } else {
             int minEvaluation = Integer.MAX_VALUE;
             BoardState minEvaluationState = null;
             if(boardState.getBlackState().getKing() == 0){
-                return new MinmaxPair(boardState, Integer.MAX_VALUE);
+                noKing = true;
             }
             Set<BoardState> children = moveGenerator.generateNextPossibleStates(boardState, Color.BLACK);
             for (BoardState child : children) {
@@ -64,6 +67,9 @@ public class Algorithm {
                 if(beta <= alpha){
                     break;
                 }
+            }
+            if(noKing){
+                minEvaluation = (Integer.MAX_VALUE / 2) + depth;
             }
             return new MinmaxPair(minEvaluationState, minEvaluation);
         }
