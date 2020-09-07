@@ -1,11 +1,8 @@
 package com.agh.technology.chess.engine.runner;
 
 import com.agh.technology.chess.engine.evaluation.ScoreEvaluation;
-import com.agh.technology.chess.engine.model.element.Board;
 import com.agh.technology.chess.engine.model.element.Color;
-import com.agh.technology.chess.engine.model.element.PieceType;
 import com.agh.technology.chess.engine.model.state.BoardState;
-import com.agh.technology.chess.engine.move.generation.AttackMasks;
 import com.agh.technology.chess.engine.move.generation.MoveGenerator;
 
 import java.util.Set;

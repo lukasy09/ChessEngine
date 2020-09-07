@@ -31,5 +31,9 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <finalName>chess-engine</finalName>
+    </build>
+
 
 </project>
