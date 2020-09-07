@@ -32,7 +32,7 @@
     </dependencies>
 
     <build>
-        <finalName>chess-engine</finalName>
+        <finalName>grim-reaper</finalName>
     </build>
 
 
