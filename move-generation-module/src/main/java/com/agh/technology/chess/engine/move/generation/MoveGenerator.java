@@ -35,12 +35,12 @@ public class MoveGenerator {
             return generatePawnMoves(pieceType, pieceIndex, boardState, color);
         }
 
-        long ts = attackMasks.getAttackMoves().get(pieceType).get(pieceIndex);
-        for(long b = boardState.getOccupied() & attackMasks.getBlockersAndBeyond().get(pieceType).get(pieceIndex); b != 0L; b = b & (b-1)){
-            int sq = Long.numberOfTrailingZeros(b);
-            ts = ts & ~attackMasks.getBehind()[pieceIndex][sq];
+        long possibleMovesBitboard = attackMasks.getAttackMoves().get(pieceType).get(pieceIndex);
+        for(long blocker = boardState.getOccupied() & attackMasks.getBlockersAndBeyond().get(pieceType).get(pieceIndex); blocker != 0L; blocker = blocker & (blocker-1)){
+            int blockerSquare = Long.numberOfTrailingZeros(blocker);
+            possibleMovesBitboard = possibleMovesBitboard & ~attackMasks.getBehind()[pieceIndex][blockerSquare];
         }
-        return ts;
+        return possibleMovesBitboard;
     }
 
     private Long generatePawnMoves(PieceType pieceType, int pieceIndex, BoardState boardState, Color color){

@@ -3,8 +3,11 @@
 ## To build `*.jar`
 
 ```shell script
-mvn clean package
-``` 
+javac -d ./build *.java
+```
 
-Sources:
-https://www.chessprogramming.org
+## To run UCI engine from `*.jar`
+
+```shell script
+jar cvfe engine1.jar GuiInterface *.class
+```
